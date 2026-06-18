@@ -191,6 +191,12 @@
                     <h3 class="text-2xl font-bold">Gráficos de Rendimiento</h3>
                     <button onclick="cerrarModal('modal-graficos')" class="text-gray-500 font-bold text-xl hover:text-red-500">✕</button>
                 </div>
+                
+                <div class="mb-6 bg-gray-50 p-4 rounded-xl border border-gray-200 flex justify-center items-center gap-4 shadow-sm">
+                    <span class="text-gray-600 font-medium">Cantidad de Alumnos Totales Registrados:</span>
+                    <span class="text-3xl font-bold text-black" id="graficos-total-alumnos">0</span>
+                </div>
+
                 <div class="grid grid-cols-2 gap-8 overflow-y-auto p-2 flex-1">
                     <div class="border border-gray-100 p-4 rounded-xl shadow-sm">
                         <h4 class="text-center font-medium mb-4 text-sm text-gray-600">Ingresos vs Gastos (Mes a Mes)</h4>
@@ -201,7 +207,7 @@
                         <canvas id="chart-ing-clase"></canvas>
                     </div>
                     <div class="border border-gray-100 p-4 rounded-xl shadow-sm">
-                        <h4 class="text-center font-medium mb-4 text-sm text-gray-600">Alumnos por Clase (Global)</h4>
+                        <h4 class="text-center font-medium mb-4 text-sm text-gray-600">Cantidad de Alumnos por Clase</h4>
                         <canvas id="chart-alum-clase"></canvas>
                     </div>
                     <div class="border border-gray-100 p-4 rounded-xl shadow-sm">
@@ -385,22 +391,39 @@
             document.getElementById('total-gastos').innerText = `$${sumaGastos}`;
         }
 
-        window.abrirModalGraficos = async () => {
+       window.abrirModalGraficos = async () => {
             document.getElementById('modal-graficos').style.display = 'flex';
             
             chartInstances.forEach(c => c.destroy());
             chartInstances = [];
 
+            // Consultas a la base de datos
             const snapIng = await getDocs(collection(db, "ingresos"));
             const snapGas = await getDocs(collection(db, "gastos"));
+            const snapAlumnos = await getDocs(collection(db, "alumnos"));
 
             const ingresosMes = {};
             const gastosMes = {};
             const ingresosClase = {};
-            const alumnosClase = {};
             let particularTotal = 0;
             let regularTotal = 0;
 
+            // Variables para Alumnos Reales
+            let totalAlumnosRegistrados = 0;
+            const alumnosPorClase = {};
+
+            // Procesar Alumnos
+            snapAlumnos.forEach(doc => {
+                const d = doc.data();
+                totalAlumnosRegistrados++;
+                const clase = d.clase || 'Sin asignar';
+                alumnosPorClase[clase] = (alumnosPorClase[clase] || 0) + 1;
+            });
+
+            // Imprimir total en el modal
+            document.getElementById('graficos-total-alumnos').innerText = totalAlumnosRegistrados;
+
+            // Procesar Ingresos
             snapIng.forEach(doc => {
                 const d = doc.data();
                 const mes = d.mes || d.fecha.slice(0, 7);
@@ -409,17 +432,61 @@
 
                 ingresosMes[mes] = (ingresosMes[mes] || 0) + valor;
                 ingresosClase[clase] = (ingresosClase[clase] || 0) + valor;
-                alumnosClase[clase] = (alumnosClase[clase] || 0) + 1;
 
                 if(clase.toLowerCase().includes('particular')) particularTotal += valor;
                 else regularTotal += valor;
             });
 
+            // Procesar Gastos
             snapGas.forEach(doc => {
                 const d = doc.data();
                 const mes = d.mes || d.fecha.slice(0, 7);
                 gastosMes[mes] = (gastosMes[mes] || 0) + Number(d.valor);
             });
+
+            const mesesLabels = [...new Set([...Object.keys(ingresosMes), ...Object.keys(gastosMes)])].sort();
+            const dataIng = mesesLabels.map(m => ingresosMes[m] || 0);
+            const dataGas = mesesLabels.map(m => gastosMes[m] || 0);
+
+            // 1. Ingresos vs Gastos
+            chartInstances.push(new Chart(document.getElementById('chart-ing-gas'), {
+                type: 'bar',
+                data: {
+                    labels: mesesLabels,
+                    datasets: [
+                        { label: 'Ingresos', data: dataIng, backgroundColor: '#10b981' },
+                        { label: 'Gastos', data: dataGas, backgroundColor: '#ef4444' }
+                    ]
+                }
+            }));
+
+            // 2. Ingresos por Curso
+            chartInstances.push(new Chart(document.getElementById('chart-ing-clase'), {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(ingresosClase),
+                    datasets: [{ data: Object.values(ingresosClase), backgroundColor: ['#3b82f6', '#8b5cf6', '#f59e0b', '#ec4899'] }]
+                }
+            }));
+
+            // 3. Cantidad de Alumnos por Clase
+            chartInstances.push(new Chart(document.getElementById('chart-alum-clase'), {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(alumnosPorClase),
+                    datasets: [{ data: Object.values(alumnosPorClase), backgroundColor: ['#6366f1', '#14b8a6', '#f43f5e', '#eab308', '#94a3b8'] }]
+                }
+            }));
+
+            // 4. Particular vs Regular
+            chartInstances.push(new Chart(document.getElementById('chart-ing-tipo'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Particular', 'Regular'],
+                    datasets: [{ data: [particularTotal, regularTotal], backgroundColor: ['#8b5cf6', '#cbd5e1'] }]
+                }
+            }));
+        };
 
             const mesesLabels = [...new Set([...Object.keys(ingresosMes), ...Object.keys(gastosMes)])].sort();
             const dataIng = mesesLabels.map(m => ingresosMes[m] || 0);

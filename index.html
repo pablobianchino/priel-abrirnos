@@ -125,6 +125,8 @@
             <button onclick="abrirModal('modal-ingreso')" class="bg-black text-white px-6 py-2 rounded-xl font-medium">+ Cargar Ingreso</button>
             <button onclick="abrirModal('modal-gasto')" class="bg-white border border-gray-300 text-black px-6 py-2 rounded-xl font-medium">+ Cargar Gasto</button>
             <button onclick="abrirModal('modal-alumno')" class="bg-white border border-gray-300 text-black px-6 py-2 rounded-xl font-medium">+ Nuevo Alumno</button>
+            <input type="file" id="input-csv-alumnos" accept=".csv" class="hidden">
+            <button onclick="document.getElementById('input-csv-alumnos').click()" class="bg-gray-100 border border-gray-300 text-gray-700 px-6 py-2 rounded-xl font-medium">📥 Carga Masiva (CSV)</button> 
         </div>
 
         <!-- MODALES CARGA -->
@@ -447,6 +449,44 @@
                 }
             }));
         };
+        // Carga Masiva de Alumnos vía CSV
+        document.getElementById('input-csv-alumnos').addEventListener('change', async (e) => {
+            const archivo = e.target.files[0];
+            if (!archivo) return;
+
+            if (!confirm(`¿Estás seguro de querer importar alumnos desde ${archivo.name}?`)) {
+                e.target.value = ''; // Limpiar el input
+                return;
+            }
+
+            const lector = new FileReader();
+            lector.onload = async function(evento) {
+                const texto = evento.target.result;
+                // Dividir el texto por saltos de línea y limpiar espacios
+                const lineas = texto.split(/\r?\n/).map(linea => linea.trim()).filter(linea => linea.length > 0);
+                
+                let contador = 0;
+                const fechaHoy = new Date().toISOString().slice(0,10);
+
+                for (const nombre of lineas) {
+                    try {
+                        await addDoc(collection(db, "alumnos"), { 
+                            nombre_completo: nombre, 
+                            fecha_alta: fechaHoy 
+                        });
+                        contador++;
+                    } catch (error) {
+                        console.error("Error al guardar alumno:", nombre, error);
+                    }
+                }
+
+                alert(`Carga masiva completada: ${contador} alumnos importados.`);
+                e.target.value = ''; // Resetear el input para permitir futuras cargas
+                cargarDatos(); // Actualizar la tabla
+            };
+            
+            lector.readAsText(archivo);
+        });
     </script>
 </body>
 </html>

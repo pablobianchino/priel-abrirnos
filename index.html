@@ -10,10 +10,10 @@
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans h-screen flex">
 
+    <!-- LOGIN -->
     <div id="login-screen" class="fixed inset-0 bg-white flex items-center justify-center z-50">
         <div class="bg-gray-100 p-8 rounded-2xl shadow-sm w-96 text-center">
-            <img src="abrirnos_logo.jpg" alt="Logo Abrirnos" class="w-24 h-24 mx-auto mb-4 object-contain rounded-full">
-            
+            <img src="abrirnos_logo.jpg" alt="Logo Abrirnos" class="w-24 h-24 mx-auto mb-4 object-cover rounded-full border border-gray-200 shadow-sm">
             <h1 class="text-2xl font-semibold mb-8">Abrirnos</h1>
             <button id="btn-login-google" class="w-full bg-white border border-gray-300 text-gray-700 p-3 rounded-xl font-medium hover:bg-gray-50 flex items-center justify-center gap-3 shadow-sm">
                 <svg class="w-5 h-5" viewBox="0 0 24 24">
@@ -31,11 +31,9 @@
     <!-- SIDEBAR -->
     <aside class="w-64 bg-white border-r border-gray-200 p-6 flex flex-col justify-between hidden" id="sidebar">
         <div>
-            <!-- Logo Circular -->
             <div class="flex justify-center mb-8">
-                <img src="abrirnos_logo.jpg" alt="Logo Abrirnos" class="w-32 h-32 object-contain rounded-full border border-gray-100 shadow-sm">
+                <img src="abrirnos_logo.jpg" alt="Logo Abrirnos" class="w-32 h-32 object-cover rounded-full border border-gray-100 shadow-sm">
             </div>
-            
             <nav class="space-y-2">
                 <button data-vista="resumen" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-100 font-medium text-gray-700">
                     <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
@@ -61,27 +59,44 @@
         </button>
     </aside>
 
+    <!-- CONTENIDO -->
     <main class="flex-1 p-10 overflow-y-auto hidden" id="main-content">
         <header class="flex justify-between items-center mb-8">
             <h2 id="titulo-seccion" class="text-3xl font-semibold">Resumen</h2>
             <input type="month" id="selector-mes" class="p-2 border border-gray-200 rounded-xl bg-white shadow-sm">
         </header>
 
-        <section id="vista-resumen" class="grid grid-cols-3 gap-6 mb-8 vista-seccion">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                <h3 class="text-gray-500 mb-2 text-sm">Ingresos Totales</h3>
-                <p class="text-3xl font-bold" id="total-ingresos">$0</p>
+        <!-- VISTA RESUMEN -->
+        <section id="vista-resumen" class="vista-seccion mb-8">
+            <div class="grid grid-cols-3 gap-6 mb-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h3 class="text-gray-500 mb-2 text-sm">Ingresos Totales</h3>
+                    <p class="text-3xl font-bold" id="total-ingresos">$0</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h3 class="text-gray-500 mb-2 text-sm">Gastos Totales</h3>
+                    <p class="text-3xl font-bold" id="total-gastos">$0</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h3 class="text-gray-500 mb-2 text-sm">Alumnos Totales</h3>
+                    <p class="text-3xl font-bold" id="total-alumnos">0</p>
+                </div>
             </div>
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                <h3 class="text-gray-500 mb-2 text-sm">Gastos Totales</h3>
-                <p class="text-3xl font-bold" id="total-gastos">$0</p>
-            </div>
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                <h3 class="text-gray-500 mb-2 text-sm">Alumnos Totales</h3>
-                <p class="text-3xl font-bold" id="total-alumnos">0</p>
+            <div class="grid grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h3 class="text-lg font-bold mb-4">Deudores del Mes</h3>
+                    <ul id="lista-deudores" class="divide-y divide-gray-100 max-h-64 overflow-y-auto text-sm"></ul>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center justify-center">
+                    <h3 class="text-lg font-bold mb-4 text-center">Estadísticas y Comparativas</h3>
+                    <button onclick="abrirModalGraficos()" class="bg-black text-white px-6 py-3 rounded-xl font-medium w-full max-w-xs hover:bg-gray-800">
+                        Abrir Gráficos
+                    </button>
+                </div>
             </div>
         </section>
 
+        <!-- VISTA INGRESOS -->
         <section id="vista-ingresos" class="vista-seccion bg-white p-6 rounded-2xl shadow-sm border border-gray-100 oculto mb-8">
             <table class="w-full text-left border-collapse">
                 <thead><tr class="border-b"><th class="p-2">Fecha</th><th class="p-2">Alumno</th><th class="p-2">Clase</th><th class="p-2">Método</th><th class="p-2">Valor</th><th class="p-2 text-right">Acciones</th></tr></thead>
@@ -89,6 +104,7 @@
             </table>
         </section>
 
+        <!-- VISTA GASTOS -->
         <section id="vista-gastos" class="vista-seccion bg-white p-6 rounded-2xl shadow-sm border border-gray-100 oculto mb-8">
             <table class="w-full text-left border-collapse">
                 <thead><tr class="border-b"><th class="p-2">Fecha</th><th class="p-2">Detalle</th><th class="p-2">Pagado</th><th class="p-2">Valor</th><th class="p-2 text-right">Acciones</th></tr></thead>
@@ -96,6 +112,7 @@
             </table>
         </section>
 
+        <!-- VISTA ALUMNOS -->
         <section id="vista-alumnos" class="vista-seccion bg-white p-6 rounded-2xl shadow-sm border border-gray-100 oculto mb-8">
             <table class="w-full text-left border-collapse">
                 <thead><tr class="border-b"><th class="p-2">Alta</th><th class="p-2">Nombre</th><th class="p-2 text-right">Acciones</th></tr></thead>
@@ -103,12 +120,14 @@
             </table>
         </section>
 
+        <!-- BOTONES -->
         <div class="flex gap-4">
             <button onclick="abrirModal('modal-ingreso')" class="bg-black text-white px-6 py-2 rounded-xl font-medium">+ Cargar Ingreso</button>
             <button onclick="abrirModal('modal-gasto')" class="bg-white border border-gray-300 text-black px-6 py-2 rounded-xl font-medium">+ Cargar Gasto</button>
             <button onclick="abrirModal('modal-alumno')" class="bg-white border border-gray-300 text-black px-6 py-2 rounded-xl font-medium">+ Nuevo Alumno</button>
         </div>
 
+        <!-- MODALES CARGA -->
         <div id="modal-ingreso" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center hidden z-50">
             <div class="bg-white p-6 rounded-2xl w-96 shadow-lg">
                 <h3 class="text-xl font-bold mb-4">Cargar Ingreso</h3>
@@ -156,6 +175,34 @@
                 </div>
             </div>
         </div>
+
+        <!-- MODAL GRÁFICOS -->
+        <div id="modal-graficos" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center hidden z-50">
+            <div class="bg-white p-8 rounded-2xl w-11/12 max-w-5xl h-[90vh] shadow-lg relative flex flex-col">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold">Gráficos de Rendimiento</h3>
+                    <button onclick="cerrarModal('modal-graficos')" class="text-gray-500 font-bold text-xl hover:text-red-500">✕</button>
+                </div>
+                <div class="grid grid-cols-2 gap-8 overflow-y-auto p-2 flex-1">
+                    <div class="border border-gray-100 p-4 rounded-xl shadow-sm">
+                        <h4 class="text-center font-medium mb-4 text-sm text-gray-600">Ingresos vs Gastos (Mes a Mes)</h4>
+                        <canvas id="chart-ing-gas"></canvas>
+                    </div>
+                    <div class="border border-gray-100 p-4 rounded-xl shadow-sm">
+                        <h4 class="text-center font-medium mb-4 text-sm text-gray-600">Ingresos por Curso (Global)</h4>
+                        <canvas id="chart-ing-clase"></canvas>
+                    </div>
+                    <div class="border border-gray-100 p-4 rounded-xl shadow-sm">
+                        <h4 class="text-center font-medium mb-4 text-sm text-gray-600">Alumnos por Clase (Global)</h4>
+                        <canvas id="chart-alum-clase"></canvas>
+                    </div>
+                    <div class="border border-gray-100 p-4 rounded-xl shadow-sm">
+                        <h4 class="text-center font-medium mb-4 text-sm text-gray-600">Particular vs Regular (Ingresos Totales)</h4>
+                        <canvas id="chart-ing-tipo"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <script type="module">
@@ -178,6 +225,7 @@
         const provider = new GoogleAuthProvider();
         const db = getFirestore(app);
 
+        let chartInstances = [];
         const selectorMes = document.getElementById('selector-mes');
         selectorMes.value = new Date().toISOString().slice(0, 7);
         
@@ -199,7 +247,7 @@
 
         document.querySelectorAll('.nav-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const vista = e.target.dataset.vista;
+                const vista = e.currentTarget.dataset.vista;
                 document.getElementById('titulo-seccion').innerText = vista.charAt(0).toUpperCase() + vista.slice(1);
                 document.querySelectorAll('.vista-seccion').forEach(sec => sec.classList.add('oculto'));
                 document.getElementById(`vista-${vista}`).classList.remove('oculto');
@@ -261,14 +309,17 @@
         async function cargarDatos() {
             const mesActual = selectorMes.value;
             
+            // Alumnos
             const snapAlumnos = await getDocs(collection(db, "alumnos"));
             let alumnosHTML = '';
             let datalistHTML = '';
             let totalAlumnos = 0;
+            const listaNombresAlumnos = [];
             
             snapAlumnos.forEach(doc => {
                 const data = doc.data();
                 totalAlumnos++;
+                listaNombresAlumnos.push(data.nombre_completo);
                 datalistHTML += `<option value="${data.nombre_completo}">`;
                 alumnosHTML += `<tr class="border-b hover:bg-gray-50"><td class="p-2">${data.fecha_alta}</td><td class="p-2">${data.nombre_completo}</td><td class="p-2 text-right"><button onclick="eliminarRegistro('alumnos', '${doc.id}')" class="text-red-500">🗑️</button></td></tr>`;
             });
@@ -276,20 +327,36 @@
             document.getElementById('lista-alumnos').innerHTML = datalistHTML;
             document.getElementById('total-alumnos').innerText = totalAlumnos;
 
+            // Ingresos
             const snapIngresos = await getDocs(collection(db, "ingresos"));
             let ingresosHTML = '';
             let sumaIngresos = 0;
+            const alumnosQuePagaron = [];
             
             snapIngresos.forEach(doc => {
                 const data = doc.data();
                 if(data.mes === mesActual || data.fecha.startsWith(mesActual)) {
                     sumaIngresos += data.valor;
+                    alumnosQuePagaron.push(data.alumno);
                     ingresosHTML += `<tr class="border-b hover:bg-gray-50"><td class="p-2">${data.fecha}</td><td class="p-2">${data.alumno}</td><td class="p-2">${data.clase}</td><td class="p-2">${data.metodo}</td><td class="p-2">$${data.valor}</td><td class="p-2 text-right"><button onclick="eliminarRegistro('ingresos', '${doc.id}')" class="text-red-500">🗑️</button></td></tr>`;
                 }
             });
             document.getElementById('tabla-ingresos').innerHTML = ingresosHTML;
             document.getElementById('total-ingresos').innerText = `$${sumaIngresos}`;
 
+            // Deudores
+            const deudores = listaNombresAlumnos.filter(nombre => !alumnosQuePagaron.includes(nombre));
+            let deudoresHTML = '';
+            if (deudores.length === 0) {
+                deudoresHTML = '<li class="py-3 text-gray-500 text-center">Todos los alumnos están al día.</li>';
+            } else {
+                deudores.forEach(d => {
+                    deudoresHTML += `<li class="py-3 flex justify-between items-center"><span class="font-medium">${d}</span><span class="text-red-500 text-xs font-semibold px-2 py-1 bg-red-50 rounded-lg">Pendiente</span></li>`;
+                });
+            }
+            document.getElementById('lista-deudores').innerHTML = deudoresHTML;
+
+            // Gastos
             const snapGastos = await getDocs(collection(db, "gastos"));
             let gastosHTML = '';
             let sumaGastos = 0;
@@ -304,6 +371,82 @@
             document.getElementById('tabla-gastos').innerHTML = gastosHTML;
             document.getElementById('total-gastos').innerText = `$${sumaGastos}`;
         }
+
+        window.abrirModalGraficos = async () => {
+            document.getElementById('modal-graficos').style.display = 'flex';
+            
+            chartInstances.forEach(c => c.destroy());
+            chartInstances = [];
+
+            const snapIng = await getDocs(collection(db, "ingresos"));
+            const snapGas = await getDocs(collection(db, "gastos"));
+
+            const ingresosMes = {};
+            const gastosMes = {};
+            const ingresosClase = {};
+            const alumnosClase = {};
+            let particularTotal = 0;
+            let regularTotal = 0;
+
+            snapIng.forEach(doc => {
+                const d = doc.data();
+                const mes = d.mes || d.fecha.slice(0, 7);
+                const clase = d.clase || 'Otro';
+                const valor = Number(d.valor);
+
+                ingresosMes[mes] = (ingresosMes[mes] || 0) + valor;
+                ingresosClase[clase] = (ingresosClase[clase] || 0) + valor;
+                alumnosClase[clase] = (alumnosClase[clase] || 0) + 1;
+
+                if(clase.toLowerCase().includes('particular')) particularTotal += valor;
+                else regularTotal += valor;
+            });
+
+            snapGas.forEach(doc => {
+                const d = doc.data();
+                const mes = d.mes || d.fecha.slice(0, 7);
+                gastosMes[mes] = (gastosMes[mes] || 0) + Number(d.valor);
+            });
+
+            const mesesLabels = [...new Set([...Object.keys(ingresosMes), ...Object.keys(gastosMes)])].sort();
+            const dataIng = mesesLabels.map(m => ingresosMes[m] || 0);
+            const dataGas = mesesLabels.map(m => gastosMes[m] || 0);
+
+            chartInstances.push(new Chart(document.getElementById('chart-ing-gas'), {
+                type: 'bar',
+                data: {
+                    labels: mesesLabels,
+                    datasets: [
+                        { label: 'Ingresos', data: dataIng, backgroundColor: '#10b981' },
+                        { label: 'Gastos', data: dataGas, backgroundColor: '#ef4444' }
+                    ]
+                }
+            }));
+
+            chartInstances.push(new Chart(document.getElementById('chart-ing-clase'), {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(ingresosClase),
+                    datasets: [{ data: Object.values(ingresosClase), backgroundColor: ['#3b82f6', '#8b5cf6', '#f59e0b', '#ec4899'] }]
+                }
+            }));
+
+            chartInstances.push(new Chart(document.getElementById('chart-alum-clase'), {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(alumnosClase),
+                    datasets: [{ data: Object.values(alumnosClase), backgroundColor: ['#6366f1', '#14b8a6', '#f43f5e', '#eab308'] }]
+                }
+            }));
+
+            chartInstances.push(new Chart(document.getElementById('chart-ing-tipo'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Particular', 'Regular'],
+                    datasets: [{ data: [particularTotal, regularTotal], backgroundColor: ['#8b5cf6', '#cbd5e1'] }]
+                }
+            }));
+        };
     </script>
 </body>
 </html>

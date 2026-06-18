@@ -175,6 +175,24 @@
             </div>
         </div>
 
+        <div id="modal-editar-alumno" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center hidden z-50">
+            <div class="bg-white p-6 rounded-2xl w-96 shadow-lg">
+                <h3 class="text-xl font-bold mb-4">Editar Alumno</h3>
+                <input type="hidden" id="editar-alumno-id">
+                <input type="text" id="editar-alumno-nombre" placeholder="Nombre completo" class="w-full mb-3 p-2 border border-gray-200 rounded-xl">
+                <select id="editar-alumno-clase" class="w-full mb-4 p-2 border border-gray-200 rounded-xl">
+                    <option value="Stretching/Entrenamiento">Stretching/Entrenamiento</option>
+                    <option value="Ritmos Latinos">Ritmos Latinos</option>
+                    <option value="Particular">Particular</option>
+                    <option value="Otro">Otro</option>
+                </select>
+                <div class="flex justify-end gap-2">
+                    <button class="px-4 py-2 bg-gray-200 rounded-xl text-sm" onclick="cerrarModal('modal-editar-alumno')">Cancelar</button>
+                    <button id="guardar-edicion-alumno" class="px-4 py-2 bg-black text-white rounded-xl text-sm">Guardar</button>
+                </div>
+            </div>
+        </div>
+
         <div id="modal-graficos" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center hidden z-50">
             <div class="bg-white p-8 rounded-2xl w-11/12 max-w-5xl h-[90vh] shadow-lg relative flex flex-col">
                 <div class="flex justify-between items-center mb-6">
@@ -210,7 +228,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAsAK1-1IZ3nlVFBxxKI660TOinJAcUEL4",
@@ -269,6 +287,40 @@
                 cargarDatos();
             }
         };
+
+        // Funciones para Edición y Pago Rápido
+        window.abrirEditarAlumno = (elemento) => {
+            const id = elemento.dataset.id;
+            const nombre = elemento.dataset.nombre;
+            const clase = elemento.dataset.clase;
+            
+            document.getElementById('editar-alumno-id').value = id;
+            document.getElementById('editar-alumno-nombre').value = nombre;
+            document.getElementById('editar-alumno-clase').value = clase || 'Stretching/Entrenamiento';
+            abrirModal('modal-editar-alumno');
+        };
+
+        window.cargarIngresoDeudor = (elemento) => {
+            const nombre = elemento.dataset.nombre;
+            document.getElementById('ingreso-alumno').value = nombre;
+            abrirModal('modal-ingreso');
+        };
+
+        document.getElementById('guardar-edicion-alumno').addEventListener('click', async () => {
+            const id = document.getElementById('editar-alumno-id').value;
+            const nombre = document.getElementById('editar-alumno-nombre').value;
+            const clase = document.getElementById('editar-alumno-clase').value;
+            
+            if (!nombre) return;
+            
+            await updateDoc(doc(db, "alumnos", id), {
+                nombre_completo: nombre,
+                clase: clase
+            });
+            
+            cerrarModal('modal-editar-alumno');
+            cargarDatos();
+        });
 
         document.getElementById('guardar-alumno').addEventListener('click', async () => {
             const nombre = document.getElementById('alumno-nombre').value;
@@ -372,7 +424,15 @@
                 totalAlumnos++;
                 listaNombresAlumnos.push(data.nombre_completo);
                 datalistHTML += `<option value="${data.nombre_completo}">`;
-                alumnosHTML += `<tr class="border-b hover:bg-gray-50"><td class="p-2">${data.fecha_alta}</td><td class="p-2">${data.nombre_completo}</td><td class="p-2">${data.clase || '-'}</td><td class="p-2 text-right"><button onclick="eliminarRegistro('alumnos', '${doc.id}')" class="text-red-500">🗑️</button></td></tr>`;
+                alumnosHTML += `<tr class="border-b hover:bg-gray-100 cursor-pointer transition-colors" data-id="${doc.id}" data-nombre="${data.nombre_completo}" data-clase="${data.clase || ''}" onclick="abrirEditarAlumno(this)">
+                    <td class="p-2">${data.fecha_alta}</td>
+                    <td class="p-2">${data.nombre_completo}</td>
+                    <td class="p-2">${data.clase || '-'}</td>
+                    <td class="p-2 text-right">
+                        <button onclick="event.stopPropagation(); abrirEditarAlumno(this.closest('tr'))" class="text-blue-500 mr-2 hover:scale-110 transition-transform" title="Editar">✏️</button>
+                        <button onclick="event.stopPropagation(); eliminarRegistro('alumnos', '${doc.id}')" class="text-red-500 hover:scale-110 transition-transform" title="Eliminar">🗑️</button>
+                    </td>
+                </tr>`;
             });
             document.getElementById('tabla-alumnos').innerHTML = alumnosHTML;
             document.getElementById('lista-alumnos').innerHTML = datalistHTML;
@@ -402,7 +462,13 @@
                 deudoresHTML = '<li class="py-3 text-gray-500 text-center">Todos los alumnos están al día.</li>';
             } else {
                 deudores.forEach(d => {
-                    deudoresHTML += `<li class="py-3 flex justify-between items-center"><span class="font-medium">${d}</span><span class="text-red-500 text-xs font-semibold px-2 py-1 bg-red-50 rounded-lg">Pendiente</span></li>`;
+                    deudoresHTML += `<li class="py-3 flex justify-between items-center hover:bg-gray-100 p-2 -mx-2 rounded-lg cursor-pointer transition-colors" data-nombre="${d}" onclick="cargarIngresoDeudor(this)" title="Cargar ingreso rápido">
+                        <span class="font-medium">${d}</span>
+                        <div class="flex items-center gap-3">
+                            <span class="text-red-500 text-xs font-semibold px-2 py-1 bg-red-50 rounded-lg">Pendiente</span>
+                            <span class="text-gray-400 text-lg hover:text-green-500 transition-colors">💸</span>
+                        </div>
+                    </li>`;
                 });
             }
             document.getElementById('lista-deudores').innerHTML = deudoresHTML;

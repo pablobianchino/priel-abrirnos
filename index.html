@@ -113,9 +113,9 @@
         </section>
 
         <!-- VISTA ALUMNOS -->
-        <section id="vista-alumnos" class="vista-seccion bg-white p-6 rounded-2xl shadow-sm border border-gray-100 oculto mb-8">
+       <section id="vista-alumnos" class="vista-seccion bg-white p-6 rounded-2xl shadow-sm border border-gray-100 oculto mb-8">
             <table class="w-full text-left border-collapse">
-                <thead><tr class="border-b"><th class="p-2">Alta</th><th class="p-2">Nombre</th><th class="p-2 text-right">Acciones</th></tr></thead>
+                <thead><tr class="border-b"><th class="p-2">Alta</th><th class="p-2">Nombre</th><th class="p-2">Clase</th><th class="p-2 text-right">Acciones</th></tr></thead>
                 <tbody id="tabla-alumnos"></tbody>
             </table>
         </section>
@@ -170,7 +170,13 @@
         <div id="modal-alumno" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center hidden z-50">
             <div class="bg-white p-6 rounded-2xl w-96 shadow-lg">
                 <h3 class="text-xl font-bold mb-4">Nuevo Alumno</h3>
-                <input type="text" id="alumno-nombre" placeholder="Nombre completo" class="w-full mb-4 p-2 border border-gray-200 rounded-xl">
+                <input type="text" id="alumno-nombre" placeholder="Nombre completo" class="w-full mb-3 p-2 border border-gray-200 rounded-xl">
+                <select id="alumno-clase" class="w-full mb-4 p-2 border border-gray-200 rounded-xl">
+                    <option value="Stretching/Entrenamiento">Stretching/Entrenamiento</option>
+                    <option value="Ritmos Latinos">Ritmos Latinos</option>
+                    <option value="Particular">Particular</option>
+                    <option value="Otro">Otro</option>
+                </select>
                 <div class="flex justify-end gap-2">
                     <button class="px-4 py-2 bg-gray-200 rounded-xl text-sm" onclick="cerrarModal('modal-alumno')">Cancelar</button>
                     <button id="guardar-alumno" class="px-4 py-2 bg-black text-white rounded-xl text-sm">Guardar</button>
@@ -272,8 +278,13 @@
 
         document.getElementById('guardar-alumno').addEventListener('click', async () => {
             const nombre = document.getElementById('alumno-nombre').value;
+            const clase = document.getElementById('alumno-clase').value;
             if (!nombre) return;
-            await addDoc(collection(db, "alumnos"), { nombre_completo: nombre, fecha_alta: new Date().toISOString().slice(0,10) });
+            await addDoc(collection(db, "alumnos"), { 
+                nombre_completo: nombre, 
+                clase: clase,
+                fecha_alta: new Date().toISOString().slice(0,10) 
+            });
             cerrarModal('modal-alumno');
             cargarDatos();
         });
@@ -323,7 +334,7 @@
                 totalAlumnos++;
                 listaNombresAlumnos.push(data.nombre_completo);
                 datalistHTML += `<option value="${data.nombre_completo}">`;
-                alumnosHTML += `<tr class="border-b hover:bg-gray-50"><td class="p-2">${data.fecha_alta}</td><td class="p-2">${data.nombre_completo}</td><td class="p-2 text-right"><button onclick="eliminarRegistro('alumnos', '${doc.id}')" class="text-red-500">🗑️</button></td></tr>`;
+                alumnosHTML += `<tr class="border-b hover:bg-gray-50"><td class="p-2">${data.fecha_alta}</td><td class="p-2">${data.nombre_completo}</td><td class="p-2">${data.clase || '-'}</td><td class="p-2 text-right"><button onclick="eliminarRegistro('alumnos', '${doc.id}')" class="text-red-500">🗑️</button></td></tr>`;
             });
             document.getElementById('tabla-alumnos').innerHTML = alumnosHTML;
             document.getElementById('lista-alumnos').innerHTML = datalistHTML;
@@ -449,40 +460,47 @@
                 }
             }));
         };
-        // Carga Masiva de Alumnos vía CSV
+       // Carga Masiva de Alumnos vía CSV
         document.getElementById('input-csv-alumnos').addEventListener('change', async (e) => {
             const archivo = e.target.files[0];
             if (!archivo) return;
 
-            if (!confirm(`¿Estás seguro de querer importar alumnos desde ${archivo.name}?`)) {
-                e.target.value = ''; // Limpiar el input
+            if (!confirm(`¿Importar alumnos desde ${archivo.name}?`)) {
+                e.target.value = ''; 
                 return;
             }
 
             const lector = new FileReader();
             lector.onload = async function(evento) {
                 const texto = evento.target.result;
-                // Dividir el texto por saltos de línea y limpiar espacios
                 const lineas = texto.split(/\r?\n/).map(linea => linea.trim()).filter(linea => linea.length > 0);
                 
                 let contador = 0;
                 const fechaHoy = new Date().toISOString().slice(0,10);
 
-                for (const nombre of lineas) {
-                    try {
-                        await addDoc(collection(db, "alumnos"), { 
-                            nombre_completo: nombre, 
-                            fecha_alta: fechaHoy 
-                        });
-                        contador++;
-                    } catch (error) {
-                        console.error("Error al guardar alumno:", nombre, error);
+                for (const linea of lineas) {
+                    // Soporta separación por coma o punto y coma
+                    const datos = linea.split(/[,;]/);
+                    const nombre = datos[0] ? datos[0].trim() : '';
+                    const clase = datos[1] ? datos[1].trim() : 'Sin asignar';
+
+                    if (nombre) {
+                        try {
+                            await addDoc(collection(db, "alumnos"), { 
+                                nombre_completo: nombre, 
+                                clase: clase,
+                                fecha_alta: fechaHoy 
+                            });
+                            contador++;
+                        } catch (error) {
+                            console.error("Error:", nombre, error);
+                        }
                     }
                 }
 
-                alert(`Carga masiva completada: ${contador} alumnos importados.`);
-                e.target.value = ''; // Resetear el input para permitir futuras cargas
-                cargarDatos(); // Actualizar la tabla
+                alert(`Completado: ${contador} alumnos importados.`);
+                e.target.value = ''; 
+                cargarDatos(); 
             };
             
             lector.readAsText(archivo);

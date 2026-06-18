@@ -83,9 +83,10 @@
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                        <h3 class="text-lg font-bold mb-4">Deudores del Mes</h3>
-                        <ul id="lista-deudores" class="divide-y divide-gray-100 max-h-64 overflow-y-auto text-sm pr-2"></ul>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col h-96">
+                        <h3 class="text-lg font-bold mb-3">Deudores del Mes</h3>
+                        <input type="text" id="buscador-deudores" placeholder="Buscar deudor..." class="w-full mb-3 p-2 border border-gray-200 rounded-xl text-sm outline-none focus:border-gray-400">
+                        <ul id="lista-deudores" class="divide-y divide-gray-100 overflow-y-auto text-sm pr-2 flex-1"></ul>
                     </div>
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center justify-center">
                         <h3 class="text-lg font-bold mb-4 text-center">Estadísticas y Comparativas</h3>
@@ -95,6 +96,7 @@
             </section>
 
             <section id="vista-ingresos" class="vista-seccion bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-gray-100 oculto mb-8">
+                <input type="text" id="buscador-ingresos" placeholder="Buscar por alumno o clase..." class="w-full md:w-1/3 mb-4 p-2 border border-gray-200 rounded-xl text-sm outline-none focus:border-gray-400">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse min-w-[600px]">
                         <thead><tr class="border-b"><th class="p-2">Fecha</th><th class="p-2">Alumno</th><th class="p-2">Clase</th><th class="p-2">Método</th><th class="p-2">Valor</th><th class="p-2 text-right">Acciones</th></tr></thead>
@@ -104,6 +106,7 @@
             </section>
 
             <section id="vista-gastos" class="vista-seccion bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-gray-100 oculto mb-8">
+                <input type="text" id="buscador-gastos" placeholder="Buscar por detalle..." class="w-full md:w-1/3 mb-4 p-2 border border-gray-200 rounded-xl text-sm outline-none focus:border-gray-400">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse min-w-[600px]">
                         <thead><tr class="border-b"><th class="p-2">Fecha</th><th class="p-2">Detalle</th><th class="p-2">Pagado</th><th class="p-2">Valor</th><th class="p-2 text-right">Acciones</th></tr></thead>
@@ -113,6 +116,7 @@
             </section>
 
             <section id="vista-alumnos" class="vista-seccion bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-gray-100 oculto mb-8">
+                <input type="text" id="buscador-alumnos" placeholder="Buscar por nombre o clase..." class="w-full md:w-1/3 mb-4 p-2 border border-gray-200 rounded-xl text-sm outline-none focus:border-gray-400">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse min-w-[600px]">
                         <thead><tr class="border-b"><th class="p-2">Alta</th><th class="p-2">Nombre</th><th class="p-2">Clase</th><th class="p-2 text-right">Acciones</th></tr></thead>
@@ -277,6 +281,37 @@
             document.getElementById('ingreso-alumno').value = elemento.dataset.nombre;
             abrirModal('modal-ingreso');
         };
+
+        // Filtros (Buscadores en tiempo real)
+        document.getElementById('buscador-deudores').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll('#lista-deudores li').forEach(li => {
+                li.style.display = li.querySelector('span').textContent.toLowerCase().includes(term) ? '' : 'none';
+            });
+        });
+
+        document.getElementById('buscador-ingresos').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll('#tabla-ingresos tr').forEach(tr => {
+                const text = (tr.cells[1].textContent + " " + tr.cells[2].textContent).toLowerCase();
+                tr.style.display = text.includes(term) ? '' : 'none';
+            });
+        });
+
+        document.getElementById('buscador-gastos').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll('#tabla-gastos tr').forEach(tr => {
+                tr.style.display = tr.cells[1].textContent.toLowerCase().includes(term) ? '' : 'none';
+            });
+        });
+
+        document.getElementById('buscador-alumnos').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll('#tabla-alumnos tr').forEach(tr => {
+                const text = (tr.cells[1].textContent + " " + tr.cells[2].textContent).toLowerCase();
+                tr.style.display = text.includes(term) ? '' : 'none';
+            });
+        });
         
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -424,7 +459,7 @@
             const deudores = listaNombresAlumnos.filter(nombre => !alumnosQuePagaron.includes(nombre));
             let deudoresHTML = '';
             if (deudores.length === 0) deudoresHTML = '<li class="py-3 text-gray-500 text-center">Todos al día.</li>';
-            else deudores.forEach(d => deudoresHTML += `<li class="py-3 flex justify-between items-center hover:bg-gray-100 p-2 -mx-2 rounded-lg cursor-pointer transition-colors" data-nombre="${d}" onclick="cargarIngresoDeudor(this)"><span class="font-medium">${d}</span><div class="flex items-center gap-2 md:gap-3"><span class="text-red-500 text-xs font-semibold px-2 py-1 bg-red-50 rounded-lg">Pendiente</span><span class="text-gray-400 text-lg hover:text-green-500">💸</span></div></li>`);
+            else deudores.forEach(d => deudoresHTML += `<li class="py-3 flex justify-between items-center hover:bg-gray-100 p-2 -mx-2 rounded-lg cursor-pointer transition-colors" data-nombre="${d}" onclick="cargarIngresoDeudor(this)"><span class="font-medium truncate mr-2">${d}</span><div class="flex items-center gap-2 md:gap-3 flex-shrink-0"><span class="text-red-500 text-xs font-semibold px-2 py-1 bg-red-50 rounded-lg">Pendiente</span><span class="text-gray-400 text-lg hover:text-green-500">💸</span></div></li>`);
             document.getElementById('lista-deudores').innerHTML = deudoresHTML;
 
             // Gastos
@@ -439,6 +474,12 @@
             });
             document.getElementById('tabla-gastos').innerHTML = gastosHTML;
             document.getElementById('total-gastos').innerText = `$${sumaGastos}`;
+
+            // Disparar eventos de inputs para mantener los filtros si estaban en uso al recargar
+            document.getElementById('buscador-deudores').dispatchEvent(new Event('input'));
+            document.getElementById('buscador-ingresos').dispatchEvent(new Event('input'));
+            document.getElementById('buscador-gastos').dispatchEvent(new Event('input'));
+            document.getElementById('buscador-alumnos').dispatchEvent(new Event('input'));
         }
 
         window.abrirModalGraficos = async () => {

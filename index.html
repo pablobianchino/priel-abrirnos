@@ -3,20 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión Escuela de Yoga</title>
-    
+    <title>Gestión Abrirnos</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <style>
-        .oculto { display: none !important; }
-    </style>
+    <style>.oculto { display: none !important; }</style>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans h-screen flex">
 
     <div id="login-screen" class="fixed inset-0 bg-white flex items-center justify-center z-50">
         <div class="bg-gray-100 p-8 rounded-2xl shadow-sm w-96 text-center">
-            <h1 class="text-2xl font-semibold mb-8">Escuela de Yoga</h1>
+            <img src="abrirnos_logo.jpg" alt="Logo Abrirnos" class="w-24 h-24 mx-auto mb-4 object-contain rounded-full">
+            
+            <h1 class="text-2xl font-semibold mb-8">Abrirnos</h1>
             <button id="btn-login-google" class="w-full bg-white border border-gray-300 text-gray-700 p-3 rounded-xl font-medium hover:bg-gray-50 flex items-center justify-center gap-3 shadow-sm">
                 <svg class="w-5 h-5" viewBox="0 0 24 24">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -45,7 +43,7 @@
 
     <main class="flex-1 p-10 overflow-y-auto hidden" id="main-content">
         <header class="flex justify-between items-center mb-8">
-            <h2 id="titulo-seccion" class="text-3xl font-semibold">Resumen del Mes</h2>
+            <h2 id="titulo-seccion" class="text-3xl font-semibold">Resumen</h2>
             <input type="month" id="selector-mes" class="p-2 border border-gray-200 rounded-xl bg-white shadow-sm">
         </header>
 
@@ -59,88 +57,233 @@
                 <p class="text-3xl font-bold" id="total-gastos">$0</p>
             </div>
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                <h3 class="text-gray-500 mb-2 text-sm">Alumnos Activos</h3>
+                <h3 class="text-gray-500 mb-2 text-sm">Alumnos Totales</h3>
                 <p class="text-3xl font-bold" id="total-alumnos">0</p>
             </div>
         </section>
 
-        <section id="vista-ingresos" class="vista-seccion oculto"><p>Tabla de Ingresos aquí</p></section>
-        <section id="vista-gastos" class="vista-seccion oculto"><p>Tabla de Gastos aquí</p></section>
-        <section id="vista-alumnos" class="vista-seccion oculto"><p>Tabla de Alumnos aquí</p></section>
+        <section id="vista-ingresos" class="vista-seccion bg-white p-6 rounded-2xl shadow-sm border border-gray-100 oculto mb-8">
+            <table class="w-full text-left border-collapse">
+                <thead><tr class="border-b"><th class="p-2">Fecha</th><th class="p-2">Alumno</th><th class="p-2">Clase</th><th class="p-2">Método</th><th class="p-2">Valor</th><th class="p-2 text-right">Acciones</th></tr></thead>
+                <tbody id="tabla-ingresos"></tbody>
+            </table>
+        </section>
+
+        <section id="vista-gastos" class="vista-seccion bg-white p-6 rounded-2xl shadow-sm border border-gray-100 oculto mb-8">
+            <table class="w-full text-left border-collapse">
+                <thead><tr class="border-b"><th class="p-2">Fecha</th><th class="p-2">Detalle</th><th class="p-2">Pagado</th><th class="p-2">Valor</th><th class="p-2 text-right">Acciones</th></tr></thead>
+                <tbody id="tabla-gastos"></tbody>
+            </table>
+        </section>
+
+        <section id="vista-alumnos" class="vista-seccion bg-white p-6 rounded-2xl shadow-sm border border-gray-100 oculto mb-8">
+            <table class="w-full text-left border-collapse">
+                <thead><tr class="border-b"><th class="p-2">Alta</th><th class="p-2">Nombre</th><th class="p-2 text-right">Acciones</th></tr></thead>
+                <tbody id="tabla-alumnos"></tbody>
+            </table>
+        </section>
 
         <div class="flex gap-4">
-            <button class="bg-black text-white px-6 py-2 rounded-xl font-medium">+ Cargar Ingreso</button>
-            <button class="bg-white border border-gray-300 text-black px-6 py-2 rounded-xl font-medium">+ Cargar Gasto</button>
-            <button class="bg-white border border-gray-300 text-black px-6 py-2 rounded-xl font-medium">+ Nuevo Alumno</button>
+            <button onclick="abrirModal('modal-ingreso')" class="bg-black text-white px-6 py-2 rounded-xl font-medium">+ Cargar Ingreso</button>
+            <button onclick="abrirModal('modal-gasto')" class="bg-white border border-gray-300 text-black px-6 py-2 rounded-xl font-medium">+ Cargar Gasto</button>
+            <button onclick="abrirModal('modal-alumno')" class="bg-white border border-gray-300 text-black px-6 py-2 rounded-xl font-medium">+ Nuevo Alumno</button>
+        </div>
+
+        <div id="modal-ingreso" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center hidden z-50">
+            <div class="bg-white p-6 rounded-2xl w-96 shadow-lg">
+                <h3 class="text-xl font-bold mb-4">Cargar Ingreso</h3>
+                <input type="text" id="ingreso-alumno" list="lista-alumnos" placeholder="Nombre del alumno" class="w-full mb-3 p-2 border border-gray-200 rounded-xl">
+                <datalist id="lista-alumnos"></datalist>
+                <select id="ingreso-clase" class="w-full mb-3 p-2 border border-gray-200 rounded-xl">
+                    <option value="Stretching/Entrenamiento">Stretching/Entrenamiento</option>
+                    <option value="Ritmos Latinos">Ritmos Latinos</option>
+                    <option value="Particular">Particular</option>
+                    <option value="Otro">Otro</option>
+                </select>
+                <select id="ingreso-metodo" class="w-full mb-3 p-2 border border-gray-200 rounded-xl">
+                    <option value="Efectivo">Efectivo</option>
+                    <option value="Transferencia">Transferencia</option>
+                </select>
+                <input type="number" id="ingreso-valor" placeholder="Valor ($)" class="w-full mb-3 p-2 border border-gray-200 rounded-xl">
+                <label class="flex items-center gap-2 mb-4"><input type="checkbox" id="ingreso-pagado" checked> Pagado</label>
+                <div class="flex justify-end gap-2">
+                    <button class="px-4 py-2 bg-gray-200 rounded-xl text-sm" onclick="cerrarModal('modal-ingreso')">Cancelar</button>
+                    <button id="guardar-ingreso" class="px-4 py-2 bg-black text-white rounded-xl text-sm">Guardar</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-gasto" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center hidden z-50">
+            <div class="bg-white p-6 rounded-2xl w-96 shadow-lg">
+                <h3 class="text-xl font-bold mb-4">Cargar Gasto</h3>
+                <input type="text" id="gasto-detalle" placeholder="Detalle del gasto" class="w-full mb-3 p-2 border border-gray-200 rounded-xl">
+                <input type="number" id="gasto-valor" placeholder="Valor ($)" class="w-full mb-3 p-2 border border-gray-200 rounded-xl">
+                <label class="flex items-center gap-2 mb-4"><input type="checkbox" id="gasto-pagado" checked> Pagado</label>
+                <div class="flex justify-end gap-2">
+                    <button class="px-4 py-2 bg-gray-200 rounded-xl text-sm" onclick="cerrarModal('modal-gasto')">Cancelar</button>
+                    <button id="guardar-gasto" class="px-4 py-2 bg-black text-white rounded-xl text-sm">Guardar</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-alumno" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center hidden z-50">
+            <div class="bg-white p-6 rounded-2xl w-96 shadow-lg">
+                <h3 class="text-xl font-bold mb-4">Nuevo Alumno</h3>
+                <input type="text" id="alumno-nombre" placeholder="Nombre completo" class="w-full mb-4 p-2 border border-gray-200 rounded-xl">
+                <div class="flex justify-end gap-2">
+                    <button class="px-4 py-2 bg-gray-200 rounded-xl text-sm" onclick="cerrarModal('modal-alumno')">Cancelar</button>
+                    <button id="guardar-alumno" class="px-4 py-2 bg-black text-white rounded-xl text-sm">Guardar</button>
+                </div>
+            </div>
         </div>
     </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-        // PEGAR TU FIREBASE CONFIG AQUÍ:
         const firebaseConfig = {
-  apiKey: "AIzaSyAsAK1-1IZ3nlVFBxxKI660TOinJAcUEL4",
-  authDomain: "priel-abrirnos.firebaseapp.com",
-  projectId: "priel-abrirnos",
-  storageBucket: "priel-abrirnos.firebasestorage.app",
-  messagingSenderId: "645131969136",
-  appId: "1:645131969136:web:9093b392d159a6859f8ab5",
-  measurementId: "G-RH6NS2SLF1"
-};
+            apiKey: "AIzaSyAsAK1-1IZ3nlVFBxxKI660TOinJAcUEL4",
+            authDomain: "priel-abrirnos.firebaseapp.com",
+            projectId: "priel-abrirnos",
+            storageBucket: "priel-abrirnos.firebasestorage.app",
+            messagingSenderId: "645131969136",
+            appId: "1:645131969136:web:9093b392d159a6859f8ab5",
+            measurementId: "G-RH6NS2SLF1"
+        };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
         const db = getFirestore(app);
 
-        const loginScreen = document.getElementById('login-screen');
-        const sidebar = document.getElementById('sidebar');
-        const mainContent = document.getElementById('main-content');
-        const btnLoginGoogle = document.getElementById('btn-login-google');
-        const btnLogout = document.getElementById('btn-logout');
-        const loginError = document.getElementById('login-error');
-        const tituloSeccion = document.getElementById('titulo-seccion');
-
-        // Estado de autenticación
+        const selectorMes = document.getElementById('selector-mes');
+        selectorMes.value = new Date().toISOString().slice(0, 7);
+        
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                loginScreen.classList.add('oculto');
-                sidebar.classList.remove('hidden');
-                mainContent.classList.remove('hidden');
+                document.getElementById('login-screen').classList.add('oculto');
+                document.getElementById('sidebar').classList.remove('hidden');
+                document.getElementById('main-content').classList.remove('hidden');
+                cargarDatos();
             } else {
-                loginScreen.classList.remove('oculto');
-                sidebar.classList.add('hidden');
-                mainContent.classList.add('hidden');
+                document.getElementById('login-screen').classList.remove('oculto');
+                document.getElementById('sidebar').classList.add('hidden');
+                document.getElementById('main-content').classList.add('hidden');
             }
         });
 
-        // Login Google
-        btnLoginGoogle.addEventListener('click', () => {
-            signInWithPopup(auth, provider)
-                .catch((error) => {
-                    console.error("Error en login:", error);
-                    loginError.classList.remove('oculto');
-                });
-        });
+        document.getElementById('btn-login-google').addEventListener('click', () => signInWithPopup(auth, provider));
+        document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
 
-        // Logout
-        btnLogout.addEventListener('click', () => signOut(auth));
-
-        // Navegación
         document.querySelectorAll('.nav-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const vista = e.target.dataset.vista;
-                tituloSeccion.innerText = vista.charAt(0).toUpperCase() + vista.slice(1);
-                
+                document.getElementById('titulo-seccion').innerText = vista.charAt(0).toUpperCase() + vista.slice(1);
                 document.querySelectorAll('.vista-seccion').forEach(sec => sec.classList.add('oculto'));
                 document.getElementById(`vista-${vista}`).classList.remove('oculto');
             });
         });
 
-        document.getElementById('selector-mes').value = new Date().toISOString().slice(0, 7);
+        selectorMes.addEventListener('change', cargarDatos);
+
+        window.abrirModal = (id) => document.getElementById(id).style.display = 'flex';
+        window.cerrarModal = (id) => {
+            document.getElementById(id).style.display = 'none';
+            document.querySelectorAll(`#${id} input:not([type="checkbox"])`).forEach(i => i.value = '');
+        };
+        window.eliminarRegistro = async (coleccion, id) => {
+            if(confirm('¿Eliminar registro?')) {
+                await deleteDoc(doc(db, coleccion, id));
+                cargarDatos();
+            }
+        };
+
+        document.getElementById('guardar-alumno').addEventListener('click', async () => {
+            const nombre = document.getElementById('alumno-nombre').value;
+            if (!nombre) return;
+            await addDoc(collection(db, "alumnos"), { nombre_completo: nombre, fecha_alta: new Date().toISOString().slice(0,10) });
+            cerrarModal('modal-alumno');
+            cargarDatos();
+        });
+
+        document.getElementById('guardar-ingreso').addEventListener('click', async () => {
+            const obj = {
+                alumno: document.getElementById('ingreso-alumno').value,
+                clase: document.getElementById('ingreso-clase').value,
+                metodo: document.getElementById('ingreso-metodo').value,
+                valor: Number(document.getElementById('ingreso-valor').value),
+                pagado: document.getElementById('ingreso-pagado').checked,
+                fecha: new Date().toISOString().slice(0,10),
+                mes: selectorMes.value
+            };
+            if (!obj.alumno || !obj.valor) return;
+            await addDoc(collection(db, "ingresos"), obj);
+            cerrarModal('modal-ingreso');
+            cargarDatos();
+        });
+
+        document.getElementById('guardar-gasto').addEventListener('click', async () => {
+            const obj = {
+                detalle: document.getElementById('gasto-detalle').value,
+                valor: Number(document.getElementById('gasto-valor').value),
+                pagado: document.getElementById('gasto-pagado').checked,
+                fecha: new Date().toISOString().slice(0,10),
+                mes: selectorMes.value
+            };
+            if (!obj.detalle || !obj.valor) return;
+            await addDoc(collection(db, "gastos"), obj);
+            cerrarModal('modal-gasto');
+            cargarDatos();
+        });
+
+        async function cargarDatos() {
+            const mesActual = selectorMes.value;
+            
+            const snapAlumnos = await getDocs(collection(db, "alumnos"));
+            let alumnosHTML = '';
+            let datalistHTML = '';
+            let totalAlumnos = 0;
+            
+            snapAlumnos.forEach(doc => {
+                const data = doc.data();
+                totalAlumnos++;
+                datalistHTML += `<option value="${data.nombre_completo}">`;
+                alumnosHTML += `<tr class="border-b hover:bg-gray-50"><td class="p-2">${data.fecha_alta}</td><td class="p-2">${data.nombre_completo}</td><td class="p-2 text-right"><button onclick="eliminarRegistro('alumnos', '${doc.id}')" class="text-red-500">🗑️</button></td></tr>`;
+            });
+            document.getElementById('tabla-alumnos').innerHTML = alumnosHTML;
+            document.getElementById('lista-alumnos').innerHTML = datalistHTML;
+            document.getElementById('total-alumnos').innerText = totalAlumnos;
+
+            const snapIngresos = await getDocs(collection(db, "ingresos"));
+            let ingresosHTML = '';
+            let sumaIngresos = 0;
+            
+            snapIngresos.forEach(doc => {
+                const data = doc.data();
+                if(data.mes === mesActual || data.fecha.startsWith(mesActual)) {
+                    sumaIngresos += data.valor;
+                    ingresosHTML += `<tr class="border-b hover:bg-gray-50"><td class="p-2">${data.fecha}</td><td class="p-2">${data.alumno}</td><td class="p-2">${data.clase}</td><td class="p-2">${data.metodo}</td><td class="p-2">$${data.valor}</td><td class="p-2 text-right"><button onclick="eliminarRegistro('ingresos', '${doc.id}')" class="text-red-500">🗑️</button></td></tr>`;
+                }
+            });
+            document.getElementById('tabla-ingresos').innerHTML = ingresosHTML;
+            document.getElementById('total-ingresos').innerText = `$${sumaIngresos}`;
+
+            const snapGastos = await getDocs(collection(db, "gastos"));
+            let gastosHTML = '';
+            let sumaGastos = 0;
+            
+            snapGastos.forEach(doc => {
+                const data = doc.data();
+                if(data.mes === mesActual || data.fecha.startsWith(mesActual)) {
+                    sumaGastos += data.valor;
+                    gastosHTML += `<tr class="border-b hover:bg-gray-50"><td class="p-2">${data.fecha}</td><td class="p-2">${data.detalle}</td><td class="p-2">${data.pagado ? 'Sí' : 'No'}</td><td class="p-2">$${data.valor}</td><td class="p-2 text-right"><button onclick="eliminarRegistro('gastos', '${doc.id}')" class="text-red-500">🗑️</button></td></tr>`;
+                }
+            });
+            document.getElementById('tabla-gastos').innerHTML = gastosHTML;
+            document.getElementById('total-gastos').innerText = `$${sumaGastos}`;
+        }
     </script>
 </body>
 </html>

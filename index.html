@@ -10,7 +10,6 @@
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans h-screen flex">
 
-    <!-- LOGIN -->
     <div id="login-screen" class="fixed inset-0 bg-white flex items-center justify-center z-50">
         <div class="bg-gray-100 p-8 rounded-2xl shadow-sm w-96 text-center">
             <img src="abrirnos_logo.jpg" alt="Logo Abrirnos" class="w-24 h-24 mx-auto mb-4 object-cover rounded-full border border-gray-200 shadow-sm">
@@ -28,7 +27,6 @@
         </div>
     </div>
 
-    <!-- SIDEBAR -->
     <aside class="w-64 bg-white border-r border-gray-200 p-6 flex flex-col justify-between hidden" id="sidebar">
         <div>
             <div class="flex justify-center mb-8">
@@ -59,14 +57,12 @@
         </button>
     </aside>
 
-    <!-- CONTENIDO -->
     <main class="flex-1 p-10 overflow-y-auto hidden" id="main-content">
         <header class="flex justify-between items-center mb-8">
             <h2 id="titulo-seccion" class="text-3xl font-semibold">Resumen</h2>
             <input type="month" id="selector-mes" class="p-2 border border-gray-200 rounded-xl bg-white shadow-sm">
         </header>
 
-        <!-- VISTA RESUMEN -->
         <section id="vista-resumen" class="vista-seccion mb-8">
             <div class="grid grid-cols-3 gap-6 mb-6">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
@@ -96,7 +92,6 @@
             </div>
         </section>
 
-        <!-- VISTA INGRESOS -->
         <section id="vista-ingresos" class="vista-seccion bg-white p-6 rounded-2xl shadow-sm border border-gray-100 oculto mb-8">
             <table class="w-full text-left border-collapse">
                 <thead><tr class="border-b"><th class="p-2">Fecha</th><th class="p-2">Alumno</th><th class="p-2">Clase</th><th class="p-2">Método</th><th class="p-2">Valor</th><th class="p-2 text-right">Acciones</th></tr></thead>
@@ -104,7 +99,6 @@
             </table>
         </section>
 
-        <!-- VISTA GASTOS -->
         <section id="vista-gastos" class="vista-seccion bg-white p-6 rounded-2xl shadow-sm border border-gray-100 oculto mb-8">
             <table class="w-full text-left border-collapse">
                 <thead><tr class="border-b"><th class="p-2">Fecha</th><th class="p-2">Detalle</th><th class="p-2">Pagado</th><th class="p-2">Valor</th><th class="p-2 text-right">Acciones</th></tr></thead>
@@ -112,24 +106,21 @@
             </table>
         </section>
 
-        <!-- VISTA ALUMNOS -->
-       <section id="vista-alumnos" class="vista-seccion bg-white p-6 rounded-2xl shadow-sm border border-gray-100 oculto mb-8">
+        <section id="vista-alumnos" class="vista-seccion bg-white p-6 rounded-2xl shadow-sm border border-gray-100 oculto mb-8">
             <table class="w-full text-left border-collapse">
                 <thead><tr class="border-b"><th class="p-2">Alta</th><th class="p-2">Nombre</th><th class="p-2">Clase</th><th class="p-2 text-right">Acciones</th></tr></thead>
                 <tbody id="tabla-alumnos"></tbody>
             </table>
         </section>
 
-        <!-- BOTONES -->
         <div class="flex gap-4">
             <button onclick="abrirModal('modal-ingreso')" class="bg-black text-white px-6 py-2 rounded-xl font-medium">+ Cargar Ingreso</button>
             <button onclick="abrirModal('modal-gasto')" class="bg-white border border-gray-300 text-black px-6 py-2 rounded-xl font-medium">+ Cargar Gasto</button>
             <button onclick="abrirModal('modal-alumno')" class="bg-white border border-gray-300 text-black px-6 py-2 rounded-xl font-medium">+ Nuevo Alumno</button>
             <input type="file" id="input-csv-alumnos" accept=".csv" class="hidden">
-            <button onclick="document.getElementById('input-csv-alumnos').click()" class="bg-gray-100 border border-gray-300 text-gray-700 px-6 py-2 rounded-xl font-medium">📥 Carga Masiva (CSV)</button> 
+            <button onclick="document.getElementById('input-csv-alumnos').click()" class="bg-gray-100 border border-gray-300 text-gray-700 px-6 py-2 rounded-xl font-medium">📥 Carga Masiva (CSV)</button>
         </div>
 
-        <!-- MODALES CARGA -->
         <div id="modal-ingreso" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center hidden z-50">
             <div class="bg-white p-6 rounded-2xl w-96 shadow-lg">
                 <h3 class="text-xl font-bold mb-4">Cargar Ingreso</h3>
@@ -184,19 +175,16 @@
             </div>
         </div>
 
-        <!-- MODAL GRÁFICOS -->
         <div id="modal-graficos" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center hidden z-50">
             <div class="bg-white p-8 rounded-2xl w-11/12 max-w-5xl h-[90vh] shadow-lg relative flex flex-col">
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="text-2xl font-bold">Gráficos de Rendimiento</h3>
                     <button onclick="cerrarModal('modal-graficos')" class="text-gray-500 font-bold text-xl hover:text-red-500">✕</button>
                 </div>
-                
                 <div class="mb-6 bg-gray-50 p-4 rounded-xl border border-gray-200 flex justify-center items-center gap-4 shadow-sm">
                     <span class="text-gray-600 font-medium">Cantidad de Alumnos Totales Registrados:</span>
                     <span class="text-3xl font-bold text-black" id="graficos-total-alumnos">0</span>
                 </div>
-
                 <div class="grid grid-cols-2 gap-8 overflow-y-auto p-2 flex-1">
                     <div class="border border-gray-100 p-4 rounded-xl shadow-sm">
                         <h4 class="text-center font-medium mb-4 text-sm text-gray-600">Ingresos vs Gastos (Mes a Mes)</h4>
@@ -325,6 +313,50 @@
             cargarDatos();
         });
 
+        document.getElementById('input-csv-alumnos').addEventListener('change', async (e) => {
+            const archivo = e.target.files[0];
+            if (!archivo) return;
+
+            if (!confirm(`¿Importar alumnos desde ${archivo.name}?`)) {
+                e.target.value = ''; 
+                return;
+            }
+
+            const lector = new FileReader();
+            lector.onload = async function(evento) {
+                const texto = evento.target.result;
+                const lineas = texto.split(/\r?\n/).map(linea => linea.trim()).filter(linea => linea.length > 0);
+                
+                let contador = 0;
+                const fechaHoy = new Date().toISOString().slice(0,10);
+
+                for (const linea of lineas) {
+                    const datos = linea.split(/[,;]/);
+                    const nombre = datos[0] ? datos[0].trim() : '';
+                    const clase = datos[1] ? datos[1].trim() : 'Sin asignar';
+
+                    if (nombre) {
+                        try {
+                            await addDoc(collection(db, "alumnos"), { 
+                                nombre_completo: nombre, 
+                                clase: clase,
+                                fecha_alta: fechaHoy 
+                            });
+                            contador++;
+                        } catch (error) {
+                            console.error("Error:", nombre, error);
+                        }
+                    }
+                }
+
+                alert(`Completado: ${contador} alumnos importados.`);
+                e.target.value = ''; 
+                cargarDatos(); 
+            };
+            
+            lector.readAsText(archivo);
+        });
+
         async function cargarDatos() {
             const mesActual = selectorMes.value;
             
@@ -391,13 +423,12 @@
             document.getElementById('total-gastos').innerText = `$${sumaGastos}`;
         }
 
-       window.abrirModalGraficos = async () => {
+        window.abrirModalGraficos = async () => {
             document.getElementById('modal-graficos').style.display = 'flex';
             
             chartInstances.forEach(c => c.destroy());
             chartInstances = [];
 
-            // Consultas a la base de datos
             const snapIng = await getDocs(collection(db, "ingresos"));
             const snapGas = await getDocs(collection(db, "gastos"));
             const snapAlumnos = await getDocs(collection(db, "alumnos"));
@@ -408,11 +439,9 @@
             let particularTotal = 0;
             let regularTotal = 0;
 
-            // Variables para Alumnos Reales
             let totalAlumnosRegistrados = 0;
             const alumnosPorClase = {};
 
-            // Procesar Alumnos
             snapAlumnos.forEach(doc => {
                 const d = doc.data();
                 totalAlumnosRegistrados++;
@@ -420,10 +449,8 @@
                 alumnosPorClase[clase] = (alumnosPorClase[clase] || 0) + 1;
             });
 
-            // Imprimir total en el modal
             document.getElementById('graficos-total-alumnos').innerText = totalAlumnosRegistrados;
 
-            // Procesar Ingresos
             snapIng.forEach(doc => {
                 const d = doc.data();
                 const mes = d.mes || d.fecha.slice(0, 7);
@@ -437,7 +464,6 @@
                 else regularTotal += valor;
             });
 
-            // Procesar Gastos
             snapGas.forEach(doc => {
                 const d = doc.data();
                 const mes = d.mes || d.fecha.slice(0, 7);
@@ -448,7 +474,6 @@
             const dataIng = mesesLabels.map(m => ingresosMes[m] || 0);
             const dataGas = mesesLabels.map(m => gastosMes[m] || 0);
 
-            // 1. Ingresos vs Gastos
             chartInstances.push(new Chart(document.getElementById('chart-ing-gas'), {
                 type: 'bar',
                 data: {
@@ -460,7 +485,6 @@
                 }
             }));
 
-            // 2. Ingresos por Curso
             chartInstances.push(new Chart(document.getElementById('chart-ing-clase'), {
                 type: 'doughnut',
                 data: {
@@ -469,7 +493,6 @@
                 }
             }));
 
-            // 3. Cantidad de Alumnos por Clase
             chartInstances.push(new Chart(document.getElementById('chart-alum-clase'), {
                 type: 'pie',
                 data: {
@@ -478,7 +501,6 @@
                 }
             }));
 
-            // 4. Particular vs Regular
             chartInstances.push(new Chart(document.getElementById('chart-ing-tipo'), {
                 type: 'doughnut',
                 data: {
@@ -487,91 +509,6 @@
                 }
             }));
         };
-
-            const mesesLabels = [...new Set([...Object.keys(ingresosMes), ...Object.keys(gastosMes)])].sort();
-            const dataIng = mesesLabels.map(m => ingresosMes[m] || 0);
-            const dataGas = mesesLabels.map(m => gastosMes[m] || 0);
-
-            chartInstances.push(new Chart(document.getElementById('chart-ing-gas'), {
-                type: 'bar',
-                data: {
-                    labels: mesesLabels,
-                    datasets: [
-                        { label: 'Ingresos', data: dataIng, backgroundColor: '#10b981' },
-                        { label: 'Gastos', data: dataGas, backgroundColor: '#ef4444' }
-                    ]
-                }
-            }));
-
-            chartInstances.push(new Chart(document.getElementById('chart-ing-clase'), {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(ingresosClase),
-                    datasets: [{ data: Object.values(ingresosClase), backgroundColor: ['#3b82f6', '#8b5cf6', '#f59e0b', '#ec4899'] }]
-                }
-            }));
-
-            chartInstances.push(new Chart(document.getElementById('chart-alum-clase'), {
-                type: 'pie',
-                data: {
-                    labels: Object.keys(alumnosClase),
-                    datasets: [{ data: Object.values(alumnosClase), backgroundColor: ['#6366f1', '#14b8a6', '#f43f5e', '#eab308'] }]
-                }
-            }));
-
-            chartInstances.push(new Chart(document.getElementById('chart-ing-tipo'), {
-                type: 'doughnut',
-                data: {
-                    labels: ['Particular', 'Regular'],
-                    datasets: [{ data: [particularTotal, regularTotal], backgroundColor: ['#8b5cf6', '#cbd5e1'] }]
-                }
-            }));
-        };
-       // Carga Masiva de Alumnos vía CSV
-        document.getElementById('input-csv-alumnos').addEventListener('change', async (e) => {
-            const archivo = e.target.files[0];
-            if (!archivo) return;
-
-            if (!confirm(`¿Importar alumnos desde ${archivo.name}?`)) {
-                e.target.value = ''; 
-                return;
-            }
-
-            const lector = new FileReader();
-            lector.onload = async function(evento) {
-                const texto = evento.target.result;
-                const lineas = texto.split(/\r?\n/).map(linea => linea.trim()).filter(linea => linea.length > 0);
-                
-                let contador = 0;
-                const fechaHoy = new Date().toISOString().slice(0,10);
-
-                for (const linea of lineas) {
-                    // Soporta separación por coma o punto y coma
-                    const datos = linea.split(/[,;]/);
-                    const nombre = datos[0] ? datos[0].trim() : '';
-                    const clase = datos[1] ? datos[1].trim() : 'Sin asignar';
-
-                    if (nombre) {
-                        try {
-                            await addDoc(collection(db, "alumnos"), { 
-                                nombre_completo: nombre, 
-                                clase: clase,
-                                fecha_alta: fechaHoy 
-                            });
-                            contador++;
-                        } catch (error) {
-                            console.error("Error:", nombre, error);
-                        }
-                    }
-                }
-
-                alert(`Completado: ${contador} alumnos importados.`);
-                e.target.value = ''; 
-                cargarDatos(); 
-            };
-            
-            lector.readAsText(archivo);
-        });
     </script>
 </body>
 </html>

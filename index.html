@@ -257,11 +257,11 @@
         // Lógica botón Atrás en Android
         let backPressedOnce = false;
         let toastTimeout;
-        history.pushState({ app: true }, "");
+        window.history.pushState({ noBack: true }, "");
 
         window.addEventListener('popstate', () => {
             if (!backPressedOnce) {
-                history.pushState({ app: true }, "");
+                window.history.pushState({ noBack: true }, "");
                 backPressedOnce = true;
                 
                 const toast = document.getElementById('toast-salir');
@@ -274,6 +274,8 @@
                     toast.classList.add('opacity-0');
                     setTimeout(() => toast.classList.add('hidden'), 300);
                 }, 2000);
+            } else {
+                window.history.back();
             }
         });
 
@@ -309,7 +311,7 @@
             abrirModal('modal-ingreso');
         };
 
-        // Filtros (Buscadores en tiempo real)
+        // Filtros
         document.getElementById('buscador-deudores').addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
             document.querySelectorAll('#lista-deudores li').forEach(li => {
@@ -502,7 +504,7 @@
             document.getElementById('tabla-gastos').innerHTML = gastosHTML;
             document.getElementById('total-gastos').innerText = `$${sumaGastos}`;
 
-            // Disparar eventos de inputs para mantener los filtros si estaban en uso al recargar
+            // Filtros persistentes
             document.getElementById('buscador-deudores').dispatchEvent(new Event('input'));
             document.getElementById('buscador-ingresos').dispatchEvent(new Event('input'));
             document.getElementById('buscador-gastos').dispatchEvent(new Event('input'));

@@ -8,222 +8,219 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>.oculto { display: none !important; }</style>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans h-screen flex">
+<body class="bg-gray-50 text-gray-800 font-sans h-screen overflow-hidden">
 
     <div id="login-screen" class="fixed inset-0 bg-white flex items-center justify-center z-50">
-        <div class="bg-gray-100 p-8 rounded-2xl shadow-sm w-96 text-center">
+        <div class="bg-gray-100 p-8 rounded-2xl shadow-sm w-[90%] max-w-md text-center">
             <img src="abrirnos_logo.jpg" alt="Logo Abrirnos" class="w-24 h-24 mx-auto mb-4 object-cover rounded-full border border-gray-200 shadow-sm">
             <h1 class="text-2xl font-semibold mb-8">Abrirnos</h1>
             <button id="btn-login-google" class="w-full bg-white border border-gray-300 text-gray-700 p-3 rounded-xl font-medium hover:bg-gray-50 flex items-center justify-center gap-3 shadow-sm">
-                <svg class="w-5 h-5" viewBox="0 0 24 24">
-                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-                </svg>
+                <svg class="w-5 h-5" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
                 Ingresar con Google
             </button>
             <p id="login-error" class="text-red-500 text-sm mt-4 oculto">Error al iniciar sesión.</p>
         </div>
     </div>
 
-    <aside class="w-64 bg-white border-r border-gray-200 p-6 flex flex-col justify-between hidden" id="sidebar">
-        <div>
-            <div class="flex justify-center mb-8">
-                <img src="abrirnos_logo.jpg" alt="Logo Abrirnos" class="w-32 h-32 object-cover rounded-full border border-gray-100 shadow-sm">
-            </div>
-            <nav class="space-y-2">
-                <button data-vista="resumen" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-100 font-medium text-gray-700">
-                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-                    Resumen
-                </button>
-                <button data-vista="ingresos" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-100 font-medium text-gray-700">
-                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    Ingresos
-                </button>
-                <button data-vista="gastos" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-100 font-medium text-gray-700">
-                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"></path></svg>
-                    Gastos
-                </button>
-                <button data-vista="alumnos" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-100 font-medium text-gray-700">
-                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                    Alumnos
-                </button>
-            </nav>
-        </div>
-        <button id="btn-logout" class="text-red-500 font-medium flex items-center gap-3 p-3 hover:bg-red-50 rounded-xl w-full text-left">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-            Cerrar Sesión
-        </button>
-    </aside>
+    <div id="app-container" class="oculto w-full h-full flex relative">
 
-    <main class="flex-1 p-10 overflow-y-auto hidden" id="main-content">
-        <header class="flex justify-between items-center mb-8">
-            <h2 id="titulo-seccion" class="text-3xl font-semibold">Resumen</h2>
-            <input type="month" id="selector-mes" class="p-2 border border-gray-200 rounded-xl bg-white shadow-sm">
-        </header>
+        <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden"></div>
 
-        <section id="vista-resumen" class="vista-seccion mb-8">
-            <div class="grid grid-cols-3 gap-6 mb-6">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <h3 class="text-gray-500 mb-2 text-sm">Ingresos Totales</h3>
-                    <p class="text-3xl font-bold" id="total-ingresos">$0</p>
+        <aside id="sidebar" class="w-64 bg-white border-r border-gray-200 p-6 flex flex-col justify-between absolute md:relative z-40 h-full transform -translate-x-full md:translate-x-0 transition-transform duration-300">
+            <div>
+                <div class="flex justify-center mb-8">
+                    <img src="abrirnos_logo.jpg" alt="Logo Abrirnos" class="w-24 h-24 md:w-32 md:h-32 object-cover rounded-full border border-gray-100 shadow-sm">
                 </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <h3 class="text-gray-500 mb-2 text-sm">Gastos Totales</h3>
-                    <p class="text-3xl font-bold" id="total-gastos">$0</p>
-                </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <h3 class="text-gray-500 mb-2 text-sm">Alumnos Totales</h3>
-                    <p class="text-3xl font-bold" id="total-alumnos">0</p>
-                </div>
-            </div>
-            <div class="grid grid-cols-2 gap-6">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <h3 class="text-lg font-bold mb-4">Deudores del Mes</h3>
-                    <ul id="lista-deudores" class="divide-y divide-gray-100 max-h-64 overflow-y-auto text-sm"></ul>
-                </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center justify-center">
-                    <h3 class="text-lg font-bold mb-4 text-center">Estadísticas y Comparativas</h3>
-                    <button onclick="abrirModalGraficos()" class="bg-black text-white px-6 py-3 rounded-xl font-medium w-full max-w-xs hover:bg-gray-800">
-                        Abrir Gráficos
+                <nav class="space-y-2">
+                    <button data-vista="resumen" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-100 font-medium text-gray-700">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                        Resumen
                     </button>
-                </div>
+                    <button data-vista="ingresos" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-100 font-medium text-gray-700">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Ingresos
+                    </button>
+                    <button data-vista="gastos" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-100 font-medium text-gray-700">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"></path></svg>
+                        Gastos
+                    </button>
+                    <button data-vista="alumnos" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl hover:bg-gray-100 font-medium text-gray-700">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        Alumnos
+                    </button>
+                </nav>
             </div>
-        </section>
+            <button id="btn-logout" class="text-red-500 font-medium flex items-center gap-3 p-3 hover:bg-red-50 rounded-xl w-full text-left">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                Cerrar Sesión
+            </button>
+        </aside>
 
-        <section id="vista-ingresos" class="vista-seccion bg-white p-6 rounded-2xl shadow-sm border border-gray-100 oculto mb-8">
-            <table class="w-full text-left border-collapse">
-                <thead><tr class="border-b"><th class="p-2">Fecha</th><th class="p-2">Alumno</th><th class="p-2">Clase</th><th class="p-2">Método</th><th class="p-2">Valor</th><th class="p-2 text-right">Acciones</th></tr></thead>
-                <tbody id="tabla-ingresos"></tbody>
-            </table>
-        </section>
-
-        <section id="vista-gastos" class="vista-seccion bg-white p-6 rounded-2xl shadow-sm border border-gray-100 oculto mb-8">
-            <table class="w-full text-left border-collapse">
-                <thead><tr class="border-b"><th class="p-2">Fecha</th><th class="p-2">Detalle</th><th class="p-2">Pagado</th><th class="p-2">Valor</th><th class="p-2 text-right">Acciones</th></tr></thead>
-                <tbody id="tabla-gastos"></tbody>
-            </table>
-        </section>
-
-        <section id="vista-alumnos" class="vista-seccion bg-white p-6 rounded-2xl shadow-sm border border-gray-100 oculto mb-8">
-            <table class="w-full text-left border-collapse">
-                <thead><tr class="border-b"><th class="p-2">Alta</th><th class="p-2">Nombre</th><th class="p-2">Clase</th><th class="p-2 text-right">Acciones</th></tr></thead>
-                <tbody id="tabla-alumnos"></tbody>
-            </table>
-        </section>
-
-        <div class="flex gap-4">
-            <button onclick="abrirModal('modal-ingreso')" class="bg-black text-white px-6 py-2 rounded-xl font-medium">+ Cargar Ingreso</button>
-            <button onclick="abrirModal('modal-gasto')" class="bg-white border border-gray-300 text-black px-6 py-2 rounded-xl font-medium">+ Cargar Gasto</button>
-            <button onclick="abrirModal('modal-alumno')" class="bg-white border border-gray-300 text-black px-6 py-2 rounded-xl font-medium">+ Nuevo Alumno</button>
-            <input type="file" id="input-csv-alumnos" accept=".csv" class="hidden">
-            <button onclick="document.getElementById('input-csv-alumnos').click()" class="bg-gray-100 border border-gray-300 text-gray-700 px-6 py-2 rounded-xl font-medium">📥 Carga Masiva (CSV)</button>
-        </div>
-
-        <div id="modal-ingreso" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center hidden z-50">
-            <div class="bg-white p-6 rounded-2xl w-96 shadow-lg">
-                <h3 class="text-xl font-bold mb-4">Cargar Ingreso</h3>
-                <input type="text" id="ingreso-alumno" list="lista-alumnos" placeholder="Nombre del alumno" class="w-full mb-3 p-2 border border-gray-200 rounded-xl">
-                <datalist id="lista-alumnos"></datalist>
-                <select id="ingreso-clase" class="w-full mb-3 p-2 border border-gray-200 rounded-xl">
-                    <option value="Stretching/Entrenamiento">Stretching/Entrenamiento</option>
-                    <option value="Ritmos Latinos">Ritmos Latinos</option>
-                    <option value="Particular">Particular</option>
-                    <option value="Otro">Otro</option>
-                </select>
-                <select id="ingreso-metodo" class="w-full mb-3 p-2 border border-gray-200 rounded-xl">
-                    <option value="Efectivo">Efectivo</option>
-                    <option value="Transferencia">Transferencia</option>
-                </select>
-                <input type="number" id="ingreso-valor" placeholder="Valor ($)" class="w-full mb-3 p-2 border border-gray-200 rounded-xl">
-                <label class="flex items-center gap-2 mb-4"><input type="checkbox" id="ingreso-pagado" checked> Pagado</label>
-                <div class="flex justify-end gap-2">
-                    <button class="px-4 py-2 bg-gray-200 rounded-xl text-sm" onclick="cerrarModal('modal-ingreso')">Cancelar</button>
-                    <button id="guardar-ingreso" class="px-4 py-2 bg-black text-white rounded-xl text-sm">Guardar</button>
+        <main class="flex-1 p-4 md:p-10 overflow-y-auto w-full" id="main-content">
+            <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                <div class="flex items-center gap-4 w-full md:w-auto">
+                    <button onclick="toggleSidebar()" class="md:hidden p-2 text-gray-600 rounded-lg hover:bg-gray-200">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                    <h2 id="titulo-seccion" class="text-2xl md:text-3xl font-semibold">Resumen</h2>
                 </div>
-            </div>
-        </div>
+                <input type="month" id="selector-mes" class="p-2 border border-gray-200 rounded-xl bg-white shadow-sm w-full md:w-auto">
+            </header>
 
-        <div id="modal-gasto" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center hidden z-50">
-            <div class="bg-white p-6 rounded-2xl w-96 shadow-lg">
-                <h3 class="text-xl font-bold mb-4">Cargar Gasto</h3>
-                <input type="text" id="gasto-detalle" placeholder="Detalle del gasto" class="w-full mb-3 p-2 border border-gray-200 rounded-xl">
-                <input type="number" id="gasto-valor" placeholder="Valor ($)" class="w-full mb-3 p-2 border border-gray-200 rounded-xl">
-                <label class="flex items-center gap-2 mb-4"><input type="checkbox" id="gasto-pagado" checked> Pagado</label>
-                <div class="flex justify-end gap-2">
-                    <button class="px-4 py-2 bg-gray-200 rounded-xl text-sm" onclick="cerrarModal('modal-gasto')">Cancelar</button>
-                    <button id="guardar-gasto" class="px-4 py-2 bg-black text-white rounded-xl text-sm">Guardar</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="modal-alumno" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center hidden z-50">
-            <div class="bg-white p-6 rounded-2xl w-96 shadow-lg">
-                <h3 class="text-xl font-bold mb-4">Nuevo Alumno</h3>
-                <input type="text" id="alumno-nombre" placeholder="Nombre completo" class="w-full mb-3 p-2 border border-gray-200 rounded-xl">
-                <select id="alumno-clase" class="w-full mb-4 p-2 border border-gray-200 rounded-xl">
-                    <option value="Stretching/Entrenamiento">Stretching/Entrenamiento</option>
-                    <option value="Ritmos Latinos">Ritmos Latinos</option>
-                    <option value="Particular">Particular</option>
-                    <option value="Otro">Otro</option>
-                </select>
-                <div class="flex justify-end gap-2">
-                    <button class="px-4 py-2 bg-gray-200 rounded-xl text-sm" onclick="cerrarModal('modal-alumno')">Cancelar</button>
-                    <button id="guardar-alumno" class="px-4 py-2 bg-black text-white rounded-xl text-sm">Guardar</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="modal-editar-alumno" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center hidden z-50">
-            <div class="bg-white p-6 rounded-2xl w-96 shadow-lg">
-                <h3 class="text-xl font-bold mb-4">Editar Alumno</h3>
-                <input type="hidden" id="editar-alumno-id">
-                <input type="text" id="editar-alumno-nombre" placeholder="Nombre completo" class="w-full mb-3 p-2 border border-gray-200 rounded-xl">
-                <select id="editar-alumno-clase" class="w-full mb-4 p-2 border border-gray-200 rounded-xl">
-                    <option value="Stretching/Entrenamiento">Stretching/Entrenamiento</option>
-                    <option value="Ritmos Latinos">Ritmos Latinos</option>
-                    <option value="Particular">Particular</option>
-                    <option value="Otro">Otro</option>
-                </select>
-                <div class="flex justify-end gap-2">
-                    <button class="px-4 py-2 bg-gray-200 rounded-xl text-sm" onclick="cerrarModal('modal-editar-alumno')">Cancelar</button>
-                    <button id="guardar-edicion-alumno" class="px-4 py-2 bg-black text-white rounded-xl text-sm">Guardar</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="modal-graficos" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center hidden z-50">
-            <div class="bg-white p-8 rounded-2xl w-11/12 max-w-5xl h-[90vh] shadow-lg relative flex flex-col">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-2xl font-bold">Gráficos de Rendimiento</h3>
-                    <button onclick="cerrarModal('modal-graficos')" class="text-gray-500 font-bold text-xl hover:text-red-500">✕</button>
-                </div>
-                <div class="mb-6 bg-gray-50 p-4 rounded-xl border border-gray-200 flex justify-center items-center gap-4 shadow-sm">
-                    <span class="text-gray-600 font-medium">Cantidad de Alumnos Totales Registrados:</span>
-                    <span class="text-3xl font-bold text-black" id="graficos-total-alumnos">0</span>
-                </div>
-                <div class="grid grid-cols-2 gap-8 overflow-y-auto p-2 flex-1">
-                    <div class="border border-gray-100 p-4 rounded-xl shadow-sm">
-                        <h4 class="text-center font-medium mb-4 text-sm text-gray-600">Ingresos vs Gastos (Mes a Mes)</h4>
-                        <canvas id="chart-ing-gas"></canvas>
+            <section id="vista-resumen" class="vista-seccion mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <h3 class="text-gray-500 mb-2 text-sm">Ingresos Totales</h3>
+                        <p class="text-3xl font-bold" id="total-ingresos">$0</p>
                     </div>
-                    <div class="border border-gray-100 p-4 rounded-xl shadow-sm">
-                        <h4 class="text-center font-medium mb-4 text-sm text-gray-600">Ingresos por Curso (Global)</h4>
-                        <canvas id="chart-ing-clase"></canvas>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <h3 class="text-gray-500 mb-2 text-sm">Gastos Totales</h3>
+                        <p class="text-3xl font-bold" id="total-gastos">$0</p>
                     </div>
-                    <div class="border border-gray-100 p-4 rounded-xl shadow-sm">
-                        <h4 class="text-center font-medium mb-4 text-sm text-gray-600">Cantidad de Alumnos por Clase</h4>
-                        <canvas id="chart-alum-clase"></canvas>
-                    </div>
-                    <div class="border border-gray-100 p-4 rounded-xl shadow-sm">
-                        <h4 class="text-center font-medium mb-4 text-sm text-gray-600">Particular vs Regular (Ingresos Totales)</h4>
-                        <canvas id="chart-ing-tipo"></canvas>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <h3 class="text-gray-500 mb-2 text-sm">Alumnos Totales</h3>
+                        <p class="text-3xl font-bold" id="total-alumnos">0</p>
                     </div>
                 </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <h3 class="text-lg font-bold mb-4">Deudores del Mes</h3>
+                        <ul id="lista-deudores" class="divide-y divide-gray-100 max-h-64 overflow-y-auto text-sm pr-2"></ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center justify-center">
+                        <h3 class="text-lg font-bold mb-4 text-center">Estadísticas y Comparativas</h3>
+                        <button onclick="abrirModalGraficos()" class="bg-black text-white px-6 py-3 rounded-xl font-medium w-full max-w-xs hover:bg-gray-800">Abrir Gráficos</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="vista-ingresos" class="vista-seccion bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-gray-100 oculto mb-8">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[600px]">
+                        <thead><tr class="border-b"><th class="p-2">Fecha</th><th class="p-2">Alumno</th><th class="p-2">Clase</th><th class="p-2">Método</th><th class="p-2">Valor</th><th class="p-2 text-right">Acciones</th></tr></thead>
+                        <tbody id="tabla-ingresos"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="vista-gastos" class="vista-seccion bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-gray-100 oculto mb-8">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[600px]">
+                        <thead><tr class="border-b"><th class="p-2">Fecha</th><th class="p-2">Detalle</th><th class="p-2">Pagado</th><th class="p-2">Valor</th><th class="p-2 text-right">Acciones</th></tr></thead>
+                        <tbody id="tabla-gastos"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="vista-alumnos" class="vista-seccion bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-gray-100 oculto mb-8">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[600px]">
+                        <thead><tr class="border-b"><th class="p-2">Alta</th><th class="p-2">Nombre</th><th class="p-2">Clase</th><th class="p-2 text-right">Acciones</th></tr></thead>
+                        <tbody id="tabla-alumnos"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <div class="flex flex-wrap gap-3 md:gap-4 mt-6">
+                <button onclick="abrirModal('modal-ingreso')" class="bg-black text-white text-sm md:text-base px-4 py-2 rounded-xl font-medium shadow-sm flex-1 md:flex-none whitespace-nowrap">+ Ingreso</button>
+                <button onclick="abrirModal('modal-gasto')" class="bg-white border border-gray-300 text-black text-sm md:text-base px-4 py-2 rounded-xl font-medium shadow-sm flex-1 md:flex-none whitespace-nowrap">+ Gasto</button>
+                <button onclick="abrirModal('modal-alumno')" class="bg-white border border-gray-300 text-black text-sm md:text-base px-4 py-2 rounded-xl font-medium shadow-sm flex-1 md:flex-none whitespace-nowrap">+ Alumno</button>
+                <input type="file" id="input-csv-alumnos" accept=".csv" class="hidden">
+                <button onclick="document.getElementById('input-csv-alumnos').click()" class="bg-gray-100 border border-gray-300 text-gray-700 text-sm md:text-base px-4 py-2 rounded-xl font-medium shadow-sm flex-1 md:flex-none w-full md:w-auto text-center mt-2 md:mt-0">📥 Importar CSV</button>
+            </div>
+        </main>
+    </div>
+
+    <div id="modal-ingreso" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center hidden z-50 p-4">
+        <div class="bg-white p-6 rounded-2xl w-full max-w-sm shadow-lg">
+            <h3 class="text-xl font-bold mb-4">Cargar Ingreso</h3>
+            <input type="text" id="ingreso-alumno" list="lista-alumnos" placeholder="Nombre del alumno" class="w-full mb-3 p-3 md:p-2 border border-gray-200 rounded-xl">
+            <datalist id="lista-alumnos"></datalist>
+            <select id="ingreso-clase" class="w-full mb-3 p-3 md:p-2 border border-gray-200 rounded-xl">
+                <option value="Stretching/Entrenamiento">Stretching/Entrenamiento</option>
+                <option value="Ritmos Latinos">Ritmos Latinos</option>
+                <option value="Particular">Particular</option>
+                <option value="Otro">Otro</option>
+            </select>
+            <select id="ingreso-metodo" class="w-full mb-3 p-3 md:p-2 border border-gray-200 rounded-xl">
+                <option value="Efectivo">Efectivo</option>
+                <option value="Transferencia">Transferencia</option>
+            </select>
+            <input type="number" id="ingreso-valor" placeholder="Valor ($)" class="w-full mb-3 p-3 md:p-2 border border-gray-200 rounded-xl">
+            <label class="flex items-center gap-2 mb-4"><input type="checkbox" id="ingreso-pagado" checked class="w-5 h-5 md:w-auto md:h-auto"> Pagado</label>
+            <div class="flex justify-end gap-2">
+                <button class="px-4 py-2 bg-gray-200 rounded-xl font-medium" onclick="cerrarModal('modal-ingreso')">Cancelar</button>
+                <button id="guardar-ingreso" class="px-4 py-2 bg-black text-white rounded-xl font-medium">Guardar</button>
             </div>
         </div>
-    </main>
+    </div>
+
+    <div id="modal-gasto" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center hidden z-50 p-4">
+        <div class="bg-white p-6 rounded-2xl w-full max-w-sm shadow-lg">
+            <h3 class="text-xl font-bold mb-4">Cargar Gasto</h3>
+            <input type="text" id="gasto-detalle" placeholder="Detalle del gasto" class="w-full mb-3 p-3 md:p-2 border border-gray-200 rounded-xl">
+            <input type="number" id="gasto-valor" placeholder="Valor ($)" class="w-full mb-3 p-3 md:p-2 border border-gray-200 rounded-xl">
+            <label class="flex items-center gap-2 mb-4"><input type="checkbox" id="gasto-pagado" checked class="w-5 h-5 md:w-auto md:h-auto"> Pagado</label>
+            <div class="flex justify-end gap-2">
+                <button class="px-4 py-2 bg-gray-200 rounded-xl font-medium" onclick="cerrarModal('modal-gasto')">Cancelar</button>
+                <button id="guardar-gasto" class="px-4 py-2 bg-black text-white rounded-xl font-medium">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-alumno" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center hidden z-50 p-4">
+        <div class="bg-white p-6 rounded-2xl w-full max-w-sm shadow-lg">
+            <h3 class="text-xl font-bold mb-4">Nuevo Alumno</h3>
+            <input type="text" id="alumno-nombre" placeholder="Nombre completo" class="w-full mb-3 p-3 md:p-2 border border-gray-200 rounded-xl">
+            <select id="alumno-clase" class="w-full mb-4 p-3 md:p-2 border border-gray-200 rounded-xl">
+                <option value="Stretching/Entrenamiento">Stretching/Entrenamiento</option>
+                <option value="Ritmos Latinos">Ritmos Latinos</option>
+                <option value="Particular">Particular</option>
+                <option value="Otro">Otro</option>
+            </select>
+            <div class="flex justify-end gap-2">
+                <button class="px-4 py-2 bg-gray-200 rounded-xl font-medium" onclick="cerrarModal('modal-alumno')">Cancelar</button>
+                <button id="guardar-alumno" class="px-4 py-2 bg-black text-white rounded-xl font-medium">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-editar-alumno" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center hidden z-50 p-4">
+        <div class="bg-white p-6 rounded-2xl w-full max-w-sm shadow-lg">
+            <h3 class="text-xl font-bold mb-4">Editar Alumno</h3>
+            <input type="hidden" id="editar-alumno-id">
+            <input type="text" id="editar-alumno-nombre" placeholder="Nombre completo" class="w-full mb-3 p-3 md:p-2 border border-gray-200 rounded-xl">
+            <select id="editar-alumno-clase" class="w-full mb-4 p-3 md:p-2 border border-gray-200 rounded-xl">
+                <option value="Stretching/Entrenamiento">Stretching/Entrenamiento</option>
+                <option value="Ritmos Latinos">Ritmos Latinos</option>
+                <option value="Particular">Particular</option>
+                <option value="Otro">Otro</option>
+            </select>
+            <div class="flex justify-end gap-2">
+                <button class="px-4 py-2 bg-gray-200 rounded-xl font-medium" onclick="cerrarModal('modal-editar-alumno')">Cancelar</button>
+                <button id="guardar-edicion-alumno" class="px-4 py-2 bg-black text-white rounded-xl font-medium">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-graficos" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center hidden z-50 p-4">
+        <div class="bg-white p-6 md:p-8 rounded-2xl w-full max-w-5xl h-[90vh] shadow-lg relative flex flex-col">
+            <div class="flex justify-between items-center mb-4 md:mb-6">
+                <h3 class="text-xl md:text-2xl font-bold">Gráficos</h3>
+                <button onclick="cerrarModal('modal-graficos')" class="text-gray-500 font-bold text-xl hover:text-red-500">✕</button>
+            </div>
+            <div class="mb-4 bg-gray-50 p-4 rounded-xl border border-gray-200 flex flex-col md:flex-row justify-center items-center gap-2 md:gap-4 shadow-sm text-center">
+                <span class="text-gray-600 font-medium text-sm md:text-base">Alumnos Totales Registrados:</span>
+                <span class="text-2xl md:text-3xl font-bold text-black" id="graficos-total-alumnos">0</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 overflow-y-auto p-2 flex-1">
+                <div class="border border-gray-100 p-4 rounded-xl shadow-sm"><h4 class="text-center font-medium mb-4 text-xs md:text-sm text-gray-600">Ingresos vs Gastos</h4><canvas id="chart-ing-gas"></canvas></div>
+                <div class="border border-gray-100 p-4 rounded-xl shadow-sm"><h4 class="text-center font-medium mb-4 text-xs md:text-sm text-gray-600">Ingresos por Curso</h4><canvas id="chart-ing-clase"></canvas></div>
+                <div class="border border-gray-100 p-4 rounded-xl shadow-sm"><h4 class="text-center font-medium mb-4 text-xs md:text-sm text-gray-600">Alumnos por Clase</h4><canvas id="chart-alum-clase"></canvas></div>
+                <div class="border border-gray-100 p-4 rounded-xl shadow-sm"><h4 class="text-center font-medium mb-4 text-xs md:text-sm text-gray-600">Particular vs Regular</h4><canvas id="chart-ing-tipo"></canvas></div>
+            </div>
+        </div>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -248,17 +245,47 @@
         let chartInstances = [];
         const selectorMes = document.getElementById('selector-mes');
         selectorMes.value = new Date().toISOString().slice(0, 7);
+
+        // UI Global Functions
+        window.toggleSidebar = () => {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        };
+        window.abrirModal = (id) => document.getElementById(id).style.display = 'flex';
+        window.cerrarModal = (id) => {
+            document.getElementById(id).style.display = 'none';
+            document.querySelectorAll(`#${id} input:not([type="checkbox"])`).forEach(i => i.value = '');
+        };
+        window.eliminarRegistro = async (coleccion, id) => {
+            if(confirm('¿Eliminar registro?')) {
+                await deleteDoc(doc(db, coleccion, id));
+                cargarDatos();
+            }
+        };
+        window.abrirEditarAlumno = (elemento) => {
+            const id = elemento.dataset.id;
+            const nombre = elemento.dataset.nombre;
+            const clase = elemento.dataset.clase;
+            document.getElementById('editar-alumno-id').value = id;
+            document.getElementById('editar-alumno-nombre').value = nombre;
+            document.getElementById('editar-alumno-clase').value = clase || 'Stretching/Entrenamiento';
+            abrirModal('modal-editar-alumno');
+        };
+        window.cargarIngresoDeudor = (elemento) => {
+            document.getElementById('ingreso-alumno').value = elemento.dataset.nombre;
+            abrirModal('modal-ingreso');
+        };
         
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 document.getElementById('login-screen').classList.add('oculto');
-                document.getElementById('sidebar').classList.remove('hidden');
-                document.getElementById('main-content').classList.remove('hidden');
+                document.getElementById('app-container').classList.remove('oculto');
                 cargarDatos();
             } else {
                 document.getElementById('login-screen').classList.remove('oculto');
-                document.getElementById('sidebar').classList.add('hidden');
-                document.getElementById('main-content').classList.add('hidden');
+                document.getElementById('app-container').classList.add('oculto');
             }
         });
 
@@ -271,53 +298,18 @@
                 document.getElementById('titulo-seccion').innerText = vista.charAt(0).toUpperCase() + vista.slice(1);
                 document.querySelectorAll('.vista-seccion').forEach(sec => sec.classList.add('oculto'));
                 document.getElementById(`vista-${vista}`).classList.remove('oculto');
+                if (window.innerWidth < 768) toggleSidebar();
             });
         });
 
         selectorMes.addEventListener('change', cargarDatos);
 
-        window.abrirModal = (id) => document.getElementById(id).style.display = 'flex';
-        window.cerrarModal = (id) => {
-            document.getElementById(id).style.display = 'none';
-            document.querySelectorAll(`#${id} input:not([type="checkbox"])`).forEach(i => i.value = '');
-        };
-        window.eliminarRegistro = async (coleccion, id) => {
-            if(confirm('¿Eliminar registro?')) {
-                await deleteDoc(doc(db, coleccion, id));
-                cargarDatos();
-            }
-        };
-
-        // Funciones para Edición y Pago Rápido
-        window.abrirEditarAlumno = (elemento) => {
-            const id = elemento.dataset.id;
-            const nombre = elemento.dataset.nombre;
-            const clase = elemento.dataset.clase;
-            
-            document.getElementById('editar-alumno-id').value = id;
-            document.getElementById('editar-alumno-nombre').value = nombre;
-            document.getElementById('editar-alumno-clase').value = clase || 'Stretching/Entrenamiento';
-            abrirModal('modal-editar-alumno');
-        };
-
-        window.cargarIngresoDeudor = (elemento) => {
-            const nombre = elemento.dataset.nombre;
-            document.getElementById('ingreso-alumno').value = nombre;
-            abrirModal('modal-ingreso');
-        };
-
         document.getElementById('guardar-edicion-alumno').addEventListener('click', async () => {
             const id = document.getElementById('editar-alumno-id').value;
             const nombre = document.getElementById('editar-alumno-nombre').value;
             const clase = document.getElementById('editar-alumno-clase').value;
-            
             if (!nombre) return;
-            
-            await updateDoc(doc(db, "alumnos", id), {
-                nombre_completo: nombre,
-                clase: clase
-            });
-            
+            await updateDoc(doc(db, "alumnos", id), { nombre_completo: nombre, clase: clase });
             cerrarModal('modal-editar-alumno');
             cargarDatos();
         });
@@ -326,11 +318,7 @@
             const nombre = document.getElementById('alumno-nombre').value;
             const clase = document.getElementById('alumno-clase').value;
             if (!nombre) return;
-            await addDoc(collection(db, "alumnos"), { 
-                nombre_completo: nombre, 
-                clase: clase,
-                fecha_alta: new Date().toISOString().slice(0,10) 
-            });
+            await addDoc(collection(db, "alumnos"), { nombre_completo: nombre, clase: clase, fecha_alta: new Date().toISOString().slice(0,10) });
             cerrarModal('modal-alumno');
             cargarDatos();
         });
@@ -368,44 +356,27 @@
         document.getElementById('input-csv-alumnos').addEventListener('change', async (e) => {
             const archivo = e.target.files[0];
             if (!archivo) return;
-
-            if (!confirm(`¿Importar alumnos desde ${archivo.name}?`)) {
-                e.target.value = ''; 
-                return;
-            }
+            if (!confirm(`¿Importar alumnos desde ${archivo.name}?`)) { e.target.value = ''; return; }
 
             const lector = new FileReader();
             lector.onload = async function(evento) {
                 const texto = evento.target.result;
-                const lineas = texto.split(/\r?\n/).map(linea => linea.trim()).filter(linea => linea.length > 0);
-                
+                const lineas = texto.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
                 let contador = 0;
-                const fechaHoy = new Date().toISOString().slice(0,10);
-
                 for (const linea of lineas) {
                     const datos = linea.split(/[,;]/);
                     const nombre = datos[0] ? datos[0].trim() : '';
-                    const clase = datos[1] ? datos[1].trim() : 'Sin asignar';
-
                     if (nombre) {
                         try {
-                            await addDoc(collection(db, "alumnos"), { 
-                                nombre_completo: nombre, 
-                                clase: clase,
-                                fecha_alta: fechaHoy 
-                            });
+                            await addDoc(collection(db, "alumnos"), { nombre_completo: nombre, clase: datos[1] ? datos[1].trim() : 'Sin asignar', fecha_alta: new Date().toISOString().slice(0,10) });
                             contador++;
-                        } catch (error) {
-                            console.error("Error:", nombre, error);
-                        }
+                        } catch (error) {}
                     }
                 }
-
                 alert(`Completado: ${contador} alumnos importados.`);
                 e.target.value = ''; 
                 cargarDatos(); 
             };
-            
             lector.readAsText(archivo);
         });
 
@@ -414,25 +385,21 @@
             
             // Alumnos
             const snapAlumnos = await getDocs(collection(db, "alumnos"));
-            let alumnosHTML = '';
-            let datalistHTML = '';
-            let totalAlumnos = 0;
+            let alumnosHTML = '', datalistHTML = '', totalAlumnos = 0;
             const listaNombresAlumnos = [];
-            
             snapAlumnos.forEach(doc => {
                 const data = doc.data();
                 totalAlumnos++;
                 listaNombresAlumnos.push(data.nombre_completo);
                 datalistHTML += `<option value="${data.nombre_completo}">`;
                 alumnosHTML += `<tr class="border-b hover:bg-gray-100 cursor-pointer transition-colors" data-id="${doc.id}" data-nombre="${data.nombre_completo}" data-clase="${data.clase || ''}" onclick="abrirEditarAlumno(this)">
-                    <td class="p-2">${data.fecha_alta}</td>
-                    <td class="p-2">${data.nombre_completo}</td>
-                    <td class="p-2">${data.clase || '-'}</td>
-                    <td class="p-2 text-right">
-                        <button onclick="event.stopPropagation(); abrirEditarAlumno(this.closest('tr'))" class="text-blue-500 mr-2 hover:scale-110 transition-transform" title="Editar">✏️</button>
-                        <button onclick="event.stopPropagation(); eliminarRegistro('alumnos', '${doc.id}')" class="text-red-500 hover:scale-110 transition-transform" title="Eliminar">🗑️</button>
-                    </td>
-                </tr>`;
+                    <td class="p-2 min-w-[100px]">${data.fecha_alta}</td>
+                    <td class="p-2 min-w-[150px]">${data.nombre_completo}</td>
+                    <td class="p-2 min-w-[150px]">${data.clase || '-'}</td>
+                    <td class="p-2 text-right min-w-[100px]">
+                        <button onclick="event.stopPropagation(); abrirEditarAlumno(this.closest('tr'))" class="text-blue-500 mr-2 hover:scale-110">✏️</button>
+                        <button onclick="event.stopPropagation(); eliminarRegistro('alumnos', '${doc.id}')" class="text-red-500 hover:scale-110">🗑️</button>
+                    </td></tr>`;
             });
             document.getElementById('tabla-alumnos').innerHTML = alumnosHTML;
             document.getElementById('lista-alumnos').innerHTML = datalistHTML;
@@ -440,16 +407,14 @@
 
             // Ingresos
             const snapIngresos = await getDocs(collection(db, "ingresos"));
-            let ingresosHTML = '';
-            let sumaIngresos = 0;
+            let ingresosHTML = '', sumaIngresos = 0;
             const alumnosQuePagaron = [];
-            
             snapIngresos.forEach(doc => {
                 const data = doc.data();
                 if(data.mes === mesActual || data.fecha.startsWith(mesActual)) {
                     sumaIngresos += data.valor;
                     alumnosQuePagaron.push(data.alumno);
-                    ingresosHTML += `<tr class="border-b hover:bg-gray-50"><td class="p-2">${data.fecha}</td><td class="p-2">${data.alumno}</td><td class="p-2">${data.clase}</td><td class="p-2">${data.metodo}</td><td class="p-2">$${data.valor}</td><td class="p-2 text-right"><button onclick="eliminarRegistro('ingresos', '${doc.id}')" class="text-red-500">🗑️</button></td></tr>`;
+                    ingresosHTML += `<tr class="border-b hover:bg-gray-50"><td class="p-2 min-w-[100px]">${data.fecha}</td><td class="p-2 min-w-[150px]">${data.alumno}</td><td class="p-2 min-w-[150px]">${data.clase}</td><td class="p-2 min-w-[100px]">${data.metodo}</td><td class="p-2 min-w-[100px]">$${data.valor}</td><td class="p-2 text-right min-w-[50px]"><button onclick="eliminarRegistro('ingresos', '${doc.id}')" class="text-red-500">🗑️</button></td></tr>`;
                 }
             });
             document.getElementById('tabla-ingresos').innerHTML = ingresosHTML;
@@ -458,31 +423,18 @@
             // Deudores
             const deudores = listaNombresAlumnos.filter(nombre => !alumnosQuePagaron.includes(nombre));
             let deudoresHTML = '';
-            if (deudores.length === 0) {
-                deudoresHTML = '<li class="py-3 text-gray-500 text-center">Todos los alumnos están al día.</li>';
-            } else {
-                deudores.forEach(d => {
-                    deudoresHTML += `<li class="py-3 flex justify-between items-center hover:bg-gray-100 p-2 -mx-2 rounded-lg cursor-pointer transition-colors" data-nombre="${d}" onclick="cargarIngresoDeudor(this)" title="Cargar ingreso rápido">
-                        <span class="font-medium">${d}</span>
-                        <div class="flex items-center gap-3">
-                            <span class="text-red-500 text-xs font-semibold px-2 py-1 bg-red-50 rounded-lg">Pendiente</span>
-                            <span class="text-gray-400 text-lg hover:text-green-500 transition-colors">💸</span>
-                        </div>
-                    </li>`;
-                });
-            }
+            if (deudores.length === 0) deudoresHTML = '<li class="py-3 text-gray-500 text-center">Todos al día.</li>';
+            else deudores.forEach(d => deudoresHTML += `<li class="py-3 flex justify-between items-center hover:bg-gray-100 p-2 -mx-2 rounded-lg cursor-pointer transition-colors" data-nombre="${d}" onclick="cargarIngresoDeudor(this)"><span class="font-medium">${d}</span><div class="flex items-center gap-2 md:gap-3"><span class="text-red-500 text-xs font-semibold px-2 py-1 bg-red-50 rounded-lg">Pendiente</span><span class="text-gray-400 text-lg hover:text-green-500">💸</span></div></li>`);
             document.getElementById('lista-deudores').innerHTML = deudoresHTML;
 
             // Gastos
             const snapGastos = await getDocs(collection(db, "gastos"));
-            let gastosHTML = '';
-            let sumaGastos = 0;
-            
+            let gastosHTML = '', sumaGastos = 0;
             snapGastos.forEach(doc => {
                 const data = doc.data();
                 if(data.mes === mesActual || data.fecha.startsWith(mesActual)) {
                     sumaGastos += data.valor;
-                    gastosHTML += `<tr class="border-b hover:bg-gray-50"><td class="p-2">${data.fecha}</td><td class="p-2">${data.detalle}</td><td class="p-2">${data.pagado ? 'Sí' : 'No'}</td><td class="p-2">$${data.valor}</td><td class="p-2 text-right"><button onclick="eliminarRegistro('gastos', '${doc.id}')" class="text-red-500">🗑️</button></td></tr>`;
+                    gastosHTML += `<tr class="border-b hover:bg-gray-50"><td class="p-2 min-w-[100px]">${data.fecha}</td><td class="p-2 min-w-[200px]">${data.detalle}</td><td class="p-2 min-w-[80px]">${data.pagado ? 'Sí' : 'No'}</td><td class="p-2 min-w-[100px]">$${data.valor}</td><td class="p-2 text-right min-w-[50px]"><button onclick="eliminarRegistro('gastos', '${doc.id}')" class="text-red-500">🗑️</button></td></tr>`;
                 }
             });
             document.getElementById('tabla-gastos').innerHTML = gastosHTML;
@@ -491,89 +443,38 @@
 
         window.abrirModalGraficos = async () => {
             document.getElementById('modal-graficos').style.display = 'flex';
-            
             chartInstances.forEach(c => c.destroy());
             chartInstances = [];
 
-            const snapIng = await getDocs(collection(db, "ingresos"));
-            const snapGas = await getDocs(collection(db, "gastos"));
-            const snapAlumnos = await getDocs(collection(db, "alumnos"));
-
-            const ingresosMes = {};
-            const gastosMes = {};
-            const ingresosClase = {};
-            let particularTotal = 0;
-            let regularTotal = 0;
-
-            let totalAlumnosRegistrados = 0;
-            const alumnosPorClase = {};
+            const [snapIng, snapGas, snapAlumnos] = await Promise.all([getDocs(collection(db, "ingresos")), getDocs(collection(db, "gastos")), getDocs(collection(db, "alumnos"))]);
+            const ingresosMes = {}, gastosMes = {}, ingresosClase = {}, alumnosPorClase = {};
+            let particularTotal = 0, regularTotal = 0, totalAlumnosRegistrados = 0;
 
             snapAlumnos.forEach(doc => {
-                const d = doc.data();
                 totalAlumnosRegistrados++;
-                const clase = d.clase || 'Sin asignar';
+                const clase = doc.data().clase || 'Sin asignar';
                 alumnosPorClase[clase] = (alumnosPorClase[clase] || 0) + 1;
             });
-
             document.getElementById('graficos-total-alumnos').innerText = totalAlumnosRegistrados;
 
             snapIng.forEach(doc => {
-                const d = doc.data();
-                const mes = d.mes || d.fecha.slice(0, 7);
-                const clase = d.clase || 'Otro';
-                const valor = Number(d.valor);
-
+                const d = doc.data(), mes = d.mes || d.fecha.slice(0, 7), clase = d.clase || 'Otro', valor = Number(d.valor);
                 ingresosMes[mes] = (ingresosMes[mes] || 0) + valor;
                 ingresosClase[clase] = (ingresosClase[clase] || 0) + valor;
-
-                if(clase.toLowerCase().includes('particular')) particularTotal += valor;
-                else regularTotal += valor;
+                clase.toLowerCase().includes('particular') ? particularTotal += valor : regularTotal += valor;
             });
 
             snapGas.forEach(doc => {
-                const d = doc.data();
-                const mes = d.mes || d.fecha.slice(0, 7);
+                const d = doc.data(), mes = d.mes || d.fecha.slice(0, 7);
                 gastosMes[mes] = (gastosMes[mes] || 0) + Number(d.valor);
             });
 
             const mesesLabels = [...new Set([...Object.keys(ingresosMes), ...Object.keys(gastosMes)])].sort();
-            const dataIng = mesesLabels.map(m => ingresosMes[m] || 0);
-            const dataGas = mesesLabels.map(m => gastosMes[m] || 0);
-
-            chartInstances.push(new Chart(document.getElementById('chart-ing-gas'), {
-                type: 'bar',
-                data: {
-                    labels: mesesLabels,
-                    datasets: [
-                        { label: 'Ingresos', data: dataIng, backgroundColor: '#10b981' },
-                        { label: 'Gastos', data: dataGas, backgroundColor: '#ef4444' }
-                    ]
-                }
-            }));
-
-            chartInstances.push(new Chart(document.getElementById('chart-ing-clase'), {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(ingresosClase),
-                    datasets: [{ data: Object.values(ingresosClase), backgroundColor: ['#3b82f6', '#8b5cf6', '#f59e0b', '#ec4899'] }]
-                }
-            }));
-
-            chartInstances.push(new Chart(document.getElementById('chart-alum-clase'), {
-                type: 'pie',
-                data: {
-                    labels: Object.keys(alumnosPorClase),
-                    datasets: [{ data: Object.values(alumnosPorClase), backgroundColor: ['#6366f1', '#14b8a6', '#f43f5e', '#eab308', '#94a3b8'] }]
-                }
-            }));
-
-            chartInstances.push(new Chart(document.getElementById('chart-ing-tipo'), {
-                type: 'doughnut',
-                data: {
-                    labels: ['Particular', 'Regular'],
-                    datasets: [{ data: [particularTotal, regularTotal], backgroundColor: ['#8b5cf6', '#cbd5e1'] }]
-                }
-            }));
+            
+            chartInstances.push(new Chart(document.getElementById('chart-ing-gas'), { type: 'bar', data: { labels: mesesLabels, datasets: [{ label: 'Ingresos', data: mesesLabels.map(m => ingresosMes[m] || 0), backgroundColor: '#10b981' }, { label: 'Gastos', data: mesesLabels.map(m => gastosMes[m] || 0), backgroundColor: '#ef4444' }] } }));
+            chartInstances.push(new Chart(document.getElementById('chart-ing-clase'), { type: 'doughnut', data: { labels: Object.keys(ingresosClase), datasets: [{ data: Object.values(ingresosClase), backgroundColor: ['#3b82f6', '#8b5cf6', '#f59e0b', '#ec4899'] }] } }));
+            chartInstances.push(new Chart(document.getElementById('chart-alum-clase'), { type: 'pie', data: { labels: Object.keys(alumnosPorClase), datasets: [{ data: Object.values(alumnosPorClase), backgroundColor: ['#6366f1', '#14b8a6', '#f43f5e', '#eab308', '#94a3b8'] }] } }));
+            chartInstances.push(new Chart(document.getElementById('chart-ing-tipo'), { type: 'doughnut', data: { labels: ['Particular', 'Regular'], datasets: [{ data: [particularTotal, regularTotal], backgroundColor: ['#8b5cf6', '#cbd5e1'] }] } }));
         };
     </script>
 </body>
